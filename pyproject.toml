@@ -1,0 +1,49 @@
+[build-system]
+# Pin numpy < 2 to avoid pip's isolated build env pulling numpy 2.x (and conflicts)
+requires = ["setuptools>=75", "wheel", "Cython>=3.0", "numpy>=1.20,<2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "espprc"
+version = "0.2.0"
+description = "Optimized ESPPRC solver"
+requires-python = ">=3.9"
+authors = [{name = "Reza Mirjalili"}]
+dependencies = ["numpy>=1.20", "networkx>=2.5"]
+
+[tool.setuptools]
+packages = ["espprc"]
+
+[tool.setuptools.package-dir]
+espprc = "python/espprc"
+
+[tool.setuptools.package-data]
+espprc = ["*.pxd", "*.pyx"]
+
+[[tool.setuptools.ext-modules]]
+name = "espprc.bidirectional_enhanced"
+sources = [
+  "python/espprc/bidirectional_enhanced.pyx",
+  "src/cc/bidirectional.cc",
+  "src/cc/digraph.cc",
+  "src/cc/labelling.cc",
+  "src/cc/preprocessing.cc",
+  "src/cc/ref_callback.cc",
+  "src/cc/search.cc"
+]
+language = "c++"
+
+include-dirs = [".", "src/cc", "C:/vcpkg/installed/x64-windows/include"]
+
+# <-- key fix: tell linker where libs are
+library-dirs = [
+  "C:/vcpkg/installed/x64-windows/lib",
+  "C:/vcpkg/installed/x64-windows/debug/lib"
+]
+
+# <-- key fix: correct library name (file is lemon.lib)
+libraries = ["lemon", "fmt"]
+
+extra-compile-args = ["/std:c++17", "/O2", "/EHsc", "/utf-8", "/bigobj", "/openmp"]
+extra-link-args = ["/openmp"]
+
