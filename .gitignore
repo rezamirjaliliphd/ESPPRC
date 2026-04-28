@@ -1,0 +1,36 @@
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Native extension build outputs
+*.pyd
+*.dll
+*.lib
+*.exp
+*.obj
+*.pdb
+
+# Generated Cython output
+python/espprc/bidirectional_enhanced.cpp
+
+# Test/cache files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# IDE/OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
