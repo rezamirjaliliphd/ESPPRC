@@ -451,8 +451,7 @@ void BiDirectional::extendCurrentLabel(const Directions& direction) {
         
         if (!params_ptr_->elementary ||
             (params_ptr_->elementary &&
-             current_label->unreachable_nodes.find(adj_v.vertex.user_id) ==
-                 current_label->unreachable_nodes.end())) {
+             !current_label->isNodeUnreachable(adj_v.vertex.user_id))) {
           if (current_label->partial_path.size() <= 1 ||
               (current_label->partial_path.size() > 1 &&
                current_label->checkPathExtension(adj_v.vertex.user_id))) {
@@ -492,8 +491,7 @@ void BiDirectional::extendSingleLabel(
       // When elementary, check if vertex already seen / unreachable and if the
       // next node is suitable (2-cycles are not allowed!)
       (params_ptr_->elementary &&
-       label->unreachable_nodes.find(adj_vertex.vertex.user_id) ==
-           label->unreachable_nodes.end())) {
+       !label->isNodeUnreachable(adj_vertex.vertex.user_id))) {
     if (label->partial_path.size() <= 1 ||
         (label->partial_path.size() > 1 &&
          label->checkPathExtension(adj_vertex.vertex.user_id))) {

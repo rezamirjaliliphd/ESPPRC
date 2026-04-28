@@ -4,6 +4,7 @@
 from libcpp.vector cimport vector
 from libcpp cimport bool
 cimport cython
+from math import isfinite
 
 from .bidirectional_enhanced cimport BiDirectional
 
@@ -84,7 +85,7 @@ def solve_espprc_enhanced(
     time_window_res_idx : int, default 0
         Resource index for time (when time windows enabled)
     use_bitwise : bool, default False
-        Use bitwise operations for elementary checking (auto for |V|<=64)
+        Use bitwise operations for elementary checking (available for |V|<=64)
     enable_parallel : bool, default False
         Enable parallel label processing
     num_threads : int, default 1
@@ -136,6 +137,19 @@ def solve_espprc_enhanced(
 
     if v_max.size() != v_min.size():
         raise ValueError("len(max_res) must equal len(min_res)")
+    if v_max.size() == 0:
+        raise ValueError("at least one resource bound is required")
+    if v_pi.size() not in (0, v_max.size()):
+        raise ValueError("len(cg_cut_pi) must be 0 or equal len(max_res)")
+    if critical_res < 0 or critical_res >= v_max.size():
+        raise ValueError("critical_res must be a valid resource index")
+    if use_time_windows and (time_window_res_idx < 0 or time_window_res_idx >= v_max.size()):
+        raise ValueError("time_window_res_idx must be a valid resource index")
+    for i in range(v_max.size()):
+        if not isfinite(v_min[i]) or not isfinite(v_max[i]):
+            raise ValueError("resource bounds must be finite numbers")
+        if v_min[i] > v_max[i]:
+            raise ValueError(f"min_res[{i}] cannot be greater than max_res[{i}]")
 
     # Construct solver
     cdef BiDirectional* solver = new BiDirectional(
@@ -168,8 +182,11 @@ def solve_espprc_enhanced(
     if use_time_windows:
         solver.setTimeWindows(True, time_window_res_idx)
     
-    # Bitwise elementary (auto-enable for small graphs if not specified)
-    if use_bitwise or (elementary and nV <= 64):
+    # Bitwise elementary
+    if use_bitwise:
+        if nV > 64:
+            del solver
+            raise ValueError("use_bitwise=True supports at most 64 nodes")
         solver.setBitwiseElementary(True, nV)
     
     # Parallelization

@@ -8,6 +8,17 @@
 
 namespace labelling {
 
+namespace {
+bool bitwiseElementaryEnabled(const bidirectional::Params* params_ptr) {
+  return params_ptr != nullptr && params_ptr->use_bitwise_elementary &&
+         params_ptr->max_nodes > 0 && params_ptr->max_nodes <= 64;
+}
+
+std::uint64_t nodeMask(const int& user_id) {
+  return std::uint64_t{1} << static_cast<unsigned int>(user_id);
+}
+} // namespace
+
 /**
  * Label
  */
@@ -26,8 +37,16 @@ Label::Label(
       partial_path(partial_path_in),
       params_ptr(params_ptr_in) {
   if (params_ptr->elementary) {
-    // Insert elements of partial_path
-    unreachable_nodes.insert(partial_path.cbegin(), partial_path.cend());
+    if (bitwiseElementaryEnabled(params_ptr)) {
+      for (const int& node_id : partial_path) {
+        if (node_id >= 0 && node_id < 64) {
+          unreachable_mask |= nodeMask(node_id);
+        }
+      }
+    } else {
+      // Insert elements of partial_path
+      unreachable_nodes.insert(partial_path.cbegin(), partial_path.cend());
+    }
   }
 };
 
@@ -107,7 +126,7 @@ Label Label::extend(
     if (params_ptr->elementary) {
       // Push new node (direction doesn't matter here as edges have been
       // reversed for backward extensions)
-      unreachable_nodes.insert(new_node.user_id);
+      addUnreachableNode(new_node.user_id);
     }
   }
   return Label();
@@ -171,12 +190,31 @@ bool Label::checkPathExtension(const int& user_id) const {
   return true;
 }
 
+bool Label::isNodeUnreachable(const int& user_id) const {
+  if (bitwiseElementaryEnabled(params_ptr) && user_id >= 0 && user_id < 64) {
+    return (unreachable_mask & nodeMask(user_id)) != 0;
+  }
+  return unreachable_nodes.find(user_id) != unreachable_nodes.end();
+}
+
+void Label::addUnreachableNode(const int& user_id) {
+  if (bitwiseElementaryEnabled(params_ptr) && user_id >= 0 && user_id < 64) {
+    unreachable_mask |= nodeMask(user_id);
+    return;
+  }
+  unreachable_nodes.insert(user_id);
+}
+
 bool Label::checkSameFeasibleExtensionTwoCycleSimple(const Label& other) const {
   return other.partial_path.size() > 1 && partial_path.size() > 1 &&
          other.getPredecessorId() == getPredecessorId();
 }
 
 bool Label::checkSameFeasibleExtensionElementary(const Label& other) const {
+  if (bitwiseElementaryEnabled(params_ptr)) {
+    return (unreachable_mask & ~other.unreachable_mask) == 0;
+  }
+
   if (unreachable_nodes.size() == 0)
     return false;
 
@@ -481,7 +519,8 @@ bool halfwayCheck(const Label& label, const std::vector<Label>& labels) {
   auto it =
       std::find_if(labels.begin(), labels.end(), [&label](const Label& l) {
         // If path already seen
-        if (std::equal(
+        if (l.partial_path.size() == label.partial_path.size() &&
+            std::equal(
                 l.partial_path.begin(),
                 l.partial_path.end(),
                 label.partial_path.begin())) {

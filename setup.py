@@ -2,7 +2,6 @@ import sys
 import platform
 from setuptools import setup, Extension
 from Cython.Build import cythonize
-import numpy as np
 
 # Detect platform and compiler
 is_windows = sys.platform.startswith('win')
@@ -21,7 +20,7 @@ sources = [
 ]
 
 # Include directories
-include_dirs = [".", "src/cc", np.get_include()]
+include_dirs = [".", "src/cc"]
 
 # Libraries
 libraries = ["lemon", "fmt"]

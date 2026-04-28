@@ -1,6 +1,5 @@
 [build-system]
-# Pin numpy < 2 to avoid pip's isolated build env pulling numpy 2.x (and conflicts)
-requires = ["setuptools>=75", "wheel", "Cython>=3.0", "numpy>=1.20,<2"]
+requires = ["setuptools>=75", "wheel", "Cython>=3.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -46,4 +45,3 @@ libraries = ["lemon", "fmt"]
 
 extra-compile-args = ["/std:c++17", "/O2", "/EHsc", "/utf-8", "/bigobj", "/openmp"]
 extra-link-args = ["/openmp"]
-
