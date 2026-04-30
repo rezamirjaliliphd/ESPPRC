@@ -1,6 +1,7 @@
 #ifndef SRC_CC_PARAMS_H__
 #define SRC_CC_PARAMS_H__
 
+#include <chrono>
 #include <cmath>
 #include <vector>
 
@@ -23,6 +24,8 @@ class Params {
   Directions direction = bidirectional::BOTH;
   std::string method = "unprocessed";
   double time_limit = std::nan("na");
+  std::chrono::time_point<std::chrono::system_clock> start_time;
+  bool time_limit_started = false;
   double threshold = std::nan("na");
   bool elementary = true;
   bool two_cycle_elimination = false;
@@ -43,10 +46,6 @@ class Params {
   bool use_bitwise_elementary = false;  // Use bitwise operations for elementary checking
   int max_nodes = 0;  // Maximum number of nodes (for bitwise mask sizing)
   
-  // Parallelization options
-  bool enable_parallel = false;
-  int num_threads = 1;
-
   /* Constructors */
   Params(){};
   ~Params() {
@@ -64,6 +63,19 @@ class Params {
   
   void setMethod(const std::string& method_in) { method = method_in; }
   void setTimeLimit(const double& time_limit_in) { time_limit = time_limit_in; }
+  void setStartTime(
+      const std::chrono::time_point<std::chrono::system_clock>& start_time_in) {
+    start_time = start_time_in;
+    time_limit_started = true;
+  }
+  bool timeLimitExceeded() const {
+    if (std::isnan(time_limit) || !time_limit_started) {
+      return false;
+    }
+    std::chrono::duration<double> duration =
+        (std::chrono::system_clock::now() - start_time);
+    return static_cast<double>(duration.count()) >= time_limit;
+  }
   void setThreshold(const double& threshold_in) { threshold = threshold_in; }
   void setElementary(const bool& elementary_in) { elementary = elementary_in; }
   
@@ -120,17 +132,6 @@ class Params {
     max_nodes = max_nodes_in;
   }
   
-  /**
-   * Enable parallel label processing
-   * @param enable: true to enable parallelization
-   * @param threads: number of threads (default: hardware concurrency)
-   */
-  void setParallel(const bool& enable, const int& threads = 0) {
-    enable_parallel = enable;
-    if (threads > 0) {
-      num_threads = threads;
-    }
-  }
 };
 
 } // namespace bidirectional

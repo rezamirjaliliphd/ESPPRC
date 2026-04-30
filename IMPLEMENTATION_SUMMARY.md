@@ -33,9 +33,6 @@ class Params {
   bool use_bitwise_elementary = false;
   int max_nodes = 0;
   
-  // NEW: Parallelization
-  bool enable_parallel = false;
-  int num_threads = 1;
   
   // ... other parameters
 };
@@ -92,7 +89,6 @@ if (is_feasible) {
 void setKCycleElimination(const int& k);
 void setTimeWindows(const bool& enable, const int& res_idx = 0);
 void setBitwiseElementary(const bool& enable, const int& max_nodes_in = 0);
-void setParallel(const bool& enable, const int& threads = 0);
 ```
 
 ### 4. Cython Wrapper Updates
@@ -106,11 +102,9 @@ void setParallel(const bool& enable, const int& threads = 0);
   - `use_time_windows=False`: Enable time window constraints
   - `time_window_res_idx=0`: Resource index for time
   - `use_bitwise=False`: Enable bitwise elementary checking
-  - `enable_parallel=False`: Enable parallel processing
-  - `num_threads=1`: Number of threads
 
 - Added logic to call new setter methods
-- Auto-enables bitwise for graphs with ≤64 nodes when `elementary=True`
+- Enables bitwise for graphs with ≤64 nodes when `use_bitwise=True`
 
 ## Implementation Details
 
@@ -182,7 +176,7 @@ result = solve_espprc_enhanced(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
-    use_bitwise=True  # Auto-enabled for |V| ≤ 64
+    use_bitwise=True  # Available for |V| <= 64
 )
 ```
 

@@ -1,8 +1,0 @@
-Metadata-Version: 2.4
-Name: espprc
-Version: 0.2.0
-Summary: Optimized ESPPRC solver
-Author: Reza Mirjalili
-Requires-Python: >=3.9
-Requires-Dist: numpy>=1.20
-Requires-Dist: networkx>=2.5

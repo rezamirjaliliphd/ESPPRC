@@ -13,8 +13,8 @@ Enhanced C++/Cython implementation with advanced optimizations for solving ESPPR
 ### 2. **Bitwise Elementary Checking** (NEW)
 - Uses `uint64_t` (or `uint128_t`) bitmask for unreachable nodes
 - **Performance**: O(1) operations vs O(log n) for `std::set`
-- Automatically enabled for graphs with ≤64 nodes (or ≤128 with `USE_UINT128`)
-- Falls back to `std::set` for larger graphs
+- Available for graphs with up to 64 nodes
+- Uses `std::set` when `use_bitwise=False`
 - Enable with `use_bitwise=True`
 
 ### 3. **Time Window Support** (NEW)
@@ -34,12 +34,7 @@ All these C++ features are now accessible via Python:
 - `find_critical_res`: Automatically identify critical resource
 - `critical_res`: Manually set critical resource index
 
-### 5. **Parallelization Support** (READY)
-- Infrastructure for parallel label extension (requires OpenMP)
-- Enabled via `setParallel(enable, num_threads)`
-- Currently single-threaded; can be activated by uncommenting parallel sections
-
-### 6. **Improved Build System**
+### 5. **Improved Build System**
 - Cross-platform support (Windows/macOS/Linux)
 - Automatic detection of vcpkg, Homebrew, system libraries
 - Simplified installation process
@@ -138,7 +133,7 @@ result = solve_espprc_enhanced(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
-    use_bitwise=True  # Automatic for |V| ≤ 64
+    use_bitwise=True  # Available for |V| <= 64
 )
 ```
 
@@ -213,8 +208,7 @@ inline bool isNodeUnreachableBitwise(const int& node_id) const {
     return (unreachable_mask & (static_cast<node_mask_t>(1) << node_id)) != 0;
 }
 
-// Automatic selection based on graph size
-use_bitwise = elementary && (max_nodes > 0 && max_nodes <= MAX_NODES_BITWISE);
+// Explicitly enabled through use_bitwise=True for graphs with <=64 nodes.
 ```
 
 ### K-Cycle Detection

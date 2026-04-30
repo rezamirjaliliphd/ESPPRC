@@ -150,12 +150,6 @@ class BiDirectional {
     params_ptr_->setBitwiseElementary(enable, max_nodes_in);
   }
   
-  /// Enable parallel label processing
-  /// @see bidirectional::Params
-  void setParallel(const bool& enable, const int& threads = 0) {
-    params_ptr_->setParallel(enable, threads);
-  }
-  
   /// set random using a given seed
   // void setSeed(const int& seed) { std::srand(seed); }
   // Return every feasible merged label (source→sink) found during join
@@ -184,6 +178,7 @@ class BiDirectional {
   // whether the search terminated early with a valid source-sink path
   bool       terminated_early_w_st_path_ = false;
   Directions terminated_early_w_st_path_direction_;
+  bool       time_limit_reached_ = false;
   std::vector<labelling::Label> merged_labels_;
   std::vector<std::vector<int>> paths;
   /// Vectors with current maximum and minimum resources (first entry contains
@@ -343,6 +338,14 @@ class BiDirectional {
     std::chrono::duration<double> duration =
         (std::chrono::system_clock::now() - start_time_);
     return static_cast<double>(duration.count());
+  }
+
+  bool timeLimitExceeded() {
+    if (params_ptr_->timeLimitExceeded()) {
+      time_limit_reached_ = true;
+      return true;
+    }
+    return false;
   }
 
   /**

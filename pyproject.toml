@@ -43,5 +43,4 @@ library-dirs = [
 # <-- key fix: correct library name (file is lemon.lib)
 libraries = ["lemon", "fmt"]
 
-extra-compile-args = ["/std:c++17", "/O2", "/EHsc", "/utf-8", "/bigobj", "/openmp"]
-extra-link-args = ["/openmp"]
+extra-compile-args = ["/std:c++17", "/O2", "/EHsc", "/utf-8", "/bigobj"]

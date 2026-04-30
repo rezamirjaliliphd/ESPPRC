@@ -41,9 +41,7 @@ def solve_espprc_enhanced(
     critical_res=0,
     use_time_windows=False,
     time_window_res_idx=0,
-    use_bitwise=False,
-    enable_parallel=False,
-    num_threads=1
+    use_bitwise=False
 ):
     """
     Enhanced wrapper for ESPPRC solver with all optimization features.
@@ -86,11 +84,6 @@ def solve_espprc_enhanced(
         Resource index for time (when time windows enabled)
     use_bitwise : bool, default False
         Use bitwise operations for elementary checking (available for |V|<=64)
-    enable_parallel : bool, default False
-        Enable parallel label processing
-    num_threads : int, default 1
-        Number of threads for parallel processing
-
     Returns
     -------
     dict with keys:
@@ -189,10 +182,6 @@ def solve_espprc_enhanced(
             raise ValueError("use_bitwise=True supports at most 64 nodes")
         solver.setBitwiseElementary(True, nV)
     
-    # Parallelization
-    if enable_parallel:
-        solver.setParallel(True, num_threads)
-
     # Add nodes
     cdef vector[int] v_nodes = _veci(range(nV))
     solver.addNodes(v_nodes)

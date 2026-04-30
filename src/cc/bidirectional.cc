@@ -3,9 +3,6 @@
 #include <algorithm> // sort, all_of, find
 #include <limits>    // numeric_limits
 #include <cmath>
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "src/cc/preprocessing.h" // lowerBoundWeight, getCriticalRes
 
 namespace bidirectional {
@@ -74,10 +71,14 @@ void BiDirectional::checkCriticalRes() const {
 
 void BiDirectional::run() {
   start_time_ = std::chrono::system_clock::now();
+  params_ptr_->setStartTime(start_time_);
   init();
 
   // SPDLOG_INFO("\t Time (s) \t | \t Solution");
   while (fwd_search_ptr_->stop == false || bwd_search_ptr_->stop == false) {
+    if (timeLimitExceeded()) {
+      break;
+    }
     const Directions& direction = getDirection();
     if (direction != NODIR) {
       move(direction);
@@ -292,9 +293,7 @@ bool BiDirectional::terminate(
     const Directions&       direction,
     const labelling::Label& label) {
   // Check time elapsed (if relevant)
-  const double& timediff_sec = getElapsedTime();
-  if (!std::isnan(params_ptr_->time_limit) &&
-      timediff_sec >= params_ptr_->time_limit) {
+  if (timeLimitExceeded()) {
     return true;
   }
   return checkValidLabel(direction, label);
@@ -402,10 +401,7 @@ void BiDirectional::extendCurrentLabel(const Directions& direction) {
   // Extend and check current resource feasibility for each edge
   Search*                            search_ptr    = getSearchPtr(direction);
   std::shared_ptr<labelling::Label>& current_label = search_ptr->current_label;
-  
-  // Collect all adjacent vertices first
-  std::vector<AdjVertex> adj_vertices;
-  
+
   if (direction == FWD) {
     // For each outgoing arc from the current label
     for (LemonGraph::OutArcIt a(
@@ -413,7 +409,11 @@ void BiDirectional::extendCurrentLabel(const Directions& direction) {
              graph_ptr_->getLNodeFromId(current_label->vertex.lemon_id));
          a != lemon::INVALID;
          ++a) {
-      adj_vertices.push_back(graph_ptr_->getAdjVertex(a, true));
+      if (timeLimitExceeded()) {
+        search_ptr->stop = true;
+        return;
+      }
+      extendSingleLabel(current_label.get(), direction, graph_ptr_->getAdjVertex(a, true));
     }
   } else {
     // For each incoming arc to the current label
@@ -422,62 +422,11 @@ void BiDirectional::extendCurrentLabel(const Directions& direction) {
              graph_ptr_->getLNodeFromId(current_label->vertex.lemon_id));
          a != lemon::INVALID;
          ++a) {
-      adj_vertices.push_back(graph_ptr_->getAdjVertex(a, false));
-    }
-  }
-  
-  const int num_arcs = adj_vertices.size();
-  
-  // Only parallelize if enabled and enough arcs to justify overhead
-#ifdef _OPENMP
-  const bool use_parallel = params_ptr_->enable_parallel && num_arcs > 20;
-#else
-  const bool use_parallel = false;
-#endif
-  
-  if (use_parallel) {
-    // Parallel version - collect new labels per thread
-#ifdef _OPENMP
-    std::vector<std::vector<labelling::Label>> thread_new_labels(params_ptr_->num_threads);
-    
-    #pragma omp parallel num_threads(params_ptr_->num_threads)
-    {
-      const int thread_id = omp_get_thread_num();
-      std::vector<labelling::Label>& local_labels = thread_new_labels[thread_id];
-      
-      #pragma omp for schedule(static) nowait
-      for (int i = 0; i < num_arcs; ++i) {
-        const AdjVertex& adj_v = adj_vertices[i];
-        
-        if (!params_ptr_->elementary ||
-            (params_ptr_->elementary &&
-             !current_label->isNodeUnreachable(adj_v.vertex.user_id))) {
-          if (current_label->partial_path.size() <= 1 ||
-              (current_label->partial_path.size() > 1 &&
-               current_label->checkPathExtension(adj_v.vertex.user_id))) {
-            // extend current label along edge
-            labelling::Label new_label =
-                current_label->extend(adj_v, direction, max_res_curr_, min_res_curr_);
-            
-            if (new_label.vertex.lemon_id != -1) {
-              local_labels.push_back(new_label);
-            }
-          }
-        }
+      if (timeLimitExceeded()) {
+        search_ptr->stop = true;
+        return;
       }
-    } // end parallel
-    
-    // Sequential merge of new labels
-    for (const auto& local_labels : thread_new_labels) {
-      for (const auto& new_label : local_labels) {
-        updateEfficientLabels(direction, new_label);
-      }
-    }
-#endif
-  } else {
-    // Sequential version (original logic)
-    for (const auto& adj_v : adj_vertices) {
-      extendSingleLabel(current_label.get(), direction, adj_v);
+      extendSingleLabel(current_label.get(), direction, graph_ptr_->getAdjVertex(a, false));
     }
   }
 }
@@ -646,6 +595,33 @@ void BiDirectional::saveCurrentBestLabel(const Directions& direction) {
  */
 
 void BiDirectional::postProcessing() {
+  if (time_limit_reached_ && !terminated_early_w_st_path_) {
+    best_label_ = std::make_shared<labelling::Label>();
+    if ((params_ptr_->direction == BOTH || params_ptr_->direction == FWD) &&
+        fwd_search_ptr_->intermediate_label->vertex.lemon_id != -1 &&
+        !fwd_search_ptr_->intermediate_label->partial_path.empty() &&
+        fwd_search_ptr_->intermediate_label->checkStPath(
+            graph_ptr_->source.user_id, graph_ptr_->sink.user_id) &&
+        fwd_search_ptr_->intermediate_label->checkFeasibility(max_res, min_res)) {
+      best_label_ = fwd_search_ptr_->intermediate_label;
+    }
+    if ((params_ptr_->direction == BOTH || params_ptr_->direction == BWD) &&
+        bwd_search_ptr_->intermediate_label->vertex.lemon_id != -1 &&
+        !bwd_search_ptr_->intermediate_label->partial_path.empty()) {
+      auto bwd_label = std::make_shared<labelling::Label>(
+          labelling::processBwdLabel(
+              *bwd_search_ptr_->intermediate_label, max_res, min_res, true));
+      if (bwd_label->checkStPath(
+              graph_ptr_->source.user_id, graph_ptr_->sink.user_id) &&
+          bwd_label->checkFeasibility(max_res, min_res) &&
+          (best_label_->vertex.lemon_id == -1 ||
+           bwd_label->weight < best_label_->weight)) {
+        best_label_ = bwd_label;
+      }
+    }
+    return;
+  }
+
   if (!terminated_early_w_st_path_) {
     if (params_ptr_->direction == BOTH) {
       // If bidirectional algorithm used and both directions traversed, run
@@ -732,158 +708,11 @@ void BiDirectional::joinLabels() {
   // lower bounds on forward and backward labels
   getMinimumWeights(fwd_min.get(), bwd_min.get());
 
-  // Thread-local storage to minimize critical sections
-  struct ThreadLocalBest {
-    std::shared_ptr<labelling::Label> label;
-    double base_cost = std::numeric_limits<double>::infinity();
-    double extra_cost = 0.0;
-    std::vector<labelling::Label> merged_labels;
-    std::vector<std::vector<int>> paths;
-  };
-
-  // Convert to vector for OpenMP indexing
-  std::vector<int> vertices(fwd_search_ptr_->visited_vertices.begin(),
-                             fwd_search_ptr_->visited_vertices.end());
-  const int num_vertices = vertices.size();
-
-  // Only parallelize if enabled and worthwhile
-  const bool use_parallel = params_ptr_->enable_parallel && num_vertices > 10;
-#ifdef _OPENMP
-  const int num_threads = use_parallel ? params_ptr_->num_threads : 1;
-#else
-  const int num_threads = 1;
-  const bool use_parallel_actual = false;  // Force sequential if no OpenMP
-#endif
-
-  if (use_parallel) {
-    // Parallel version
-    std::vector<ThreadLocalBest> thread_results(num_threads);
-    
-#ifdef _OPENMP
-    #pragma omp parallel num_threads(num_threads)
-    {
-      const int thread_id = omp_get_thread_num();
-#else
-    {
-      const int thread_id = 0;
-#endif
-      ThreadLocalBest& local_best = thread_results[thread_id];
-      local_best.label = std::make_shared<labelling::Label>();
-      local_best.label->vertex.lemon_id = -1;
-      
-      double local_UB = UB;
-      
-#ifdef _OPENMP
-      #pragma omp for schedule(dynamic, 4) nowait
-#endif
-      for (int i = 0; i < num_vertices; ++i) {
-        const int& n = vertices[i];
-        
-        // if bound check fwd_label
-        if (fwd_search_ptr_->best_labels[n]->weight + *bwd_min <= local_UB &&
-            n != graph_ptr_->sink.lemon_id) {
-          // for each forward label at n
-          for (auto fwd_iter = fwd_search_ptr_->efficient_labels[n].cbegin();
-               fwd_iter != fwd_search_ptr_->efficient_labels[n].cend();
-               ++fwd_iter) {
-            const labelling::Label& fwd_label = *fwd_iter;
-            // if bound check fwd_label
-            if (fwd_label.resource_consumption[c_res] <= HF &&
-                fwd_label.weight + *bwd_min <= local_UB) {
-              // for each successor of n
-              for (LemonGraph::OutArcIt a(
-                       *graph_ptr_->lemon_graph_ptr, graph_ptr_->getLNodeFromId(n));
-                   a != lemon::INVALID;
-                   ++a) {
-                const int&    m           = graph_ptr_->getId(graph_ptr_->head(a));
-                const double& edge_weight = graph_ptr_->getWeight(a);
-                if (checkVertexVisited(BWD, m) &&
-                    m != graph_ptr_->source.lemon_id &&
-                    (fwd_label.weight + edge_weight +
-                         bwd_search_ptr_->best_labels[m]->weight <=
-                     local_UB)) {
-                  // for each backward label at m
-                  for (auto bwd_iter =
-                           bwd_search_ptr_->efficient_labels[m].cbegin();
-                       bwd_iter != bwd_search_ptr_->efficient_labels[m].cend();
-                       ++bwd_iter) {
-                    const labelling::Label& bwd_label = *bwd_iter;
-                    if (bwd_label.resource_consumption[c_res] >= HF &&
-                        (fwd_label.weight + edge_weight + bwd_label.weight <= local_UB) &&
-                        labelling::mergePreCheck(fwd_label, bwd_label, max_res)) {
-                      labelling::Label merged_label = labelling::mergeLabels(
-                          fwd_label,
-                          bwd_label,
-                          graph_ptr_->getAdjVertex(a, true),
-                          graph_ptr_->sink,
-                          max_res,
-                          min_res);
-                      double base_cost = fwd_label.weight + edge_weight + bwd_label.weight;
-                      double extra = 0;
-                      
-                      const auto& R = merged_label.resource_consumption;
-                      const size_t m_res = std::min(R.size(),CG_cut_pi.size());
-                      for (size_t r = 0; r < m_res; r++){
-                        extra += CG_cut_pi[r]*std::floor(R[r]);
-                      }
-                      merged_label.weight += extra;
-                      
-                      if (merged_label.vertex.lemon_id != -1 &&
-                          merged_label.checkFeasibility(max_res, min_res) &&
-                          labelling::halfwayCheck(merged_label, local_best.merged_labels)) {
-                        if (local_best.label->vertex.lemon_id == -1 ||
-                            (merged_label.fullDominance(*local_best.label, FWD) ||
-                             merged_label.weight < local_best.label->weight)) {
-                          // Save to thread-local best
-                          local_best.label = std::make_shared<labelling::Label>(merged_label);
-                          local_best.base_cost = base_cost;
-                          local_best.extra_cost = extra;
-                          
-                          // Update local UB for better pruning
-                          if (merged_label.weight < local_UB) {
-                            local_UB = merged_label.weight;
-                          }
-                        }
-                      }
-                      // Add merged label to thread-local list
-                      local_best.merged_labels.push_back(merged_label);
-                      local_best.paths.push_back(merged_label.partial_path);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    } // end parallel region
-    
-    // Merge thread-local results (single-threaded, minimal overhead)
-    for (int t = 0; t < num_threads; ++t) {
-      const ThreadLocalBest& local = thread_results[t];
-      
-      // Merge best labels
-      if (local.label->vertex.lemon_id != -1) {
-        if (best_label_->vertex.lemon_id == -1 ||
-            (local.label->fullDominance(*best_label_, FWD) ||
-             local.label->weight < best_label_->weight)) {
-          best_label_ = local.label;
-          best_base_cost_ = local.base_cost;
-          best_extra_cost_ = local.extra_cost;
-          UB = best_label_->weight;
-        }
-      }
-      
-      // Merge all labels
-      merged_labels_.insert(merged_labels_.end(), 
-                           local.merged_labels.begin(), 
-                           local.merged_labels.end());
-      paths.insert(paths.end(), local.paths.begin(), local.paths.end());
-    }
-    
-  } else {
-    // Sequential version (original code)
+  // Sequential label joining.
     for (const int& n : fwd_search_ptr_->visited_vertices) {
+      if (timeLimitExceeded()) {
+        return;
+      }
       // if bound check fwd_label
       if (fwd_search_ptr_->best_labels[n]->weight + *bwd_min <= UB &&
           n != graph_ptr_->sink.lemon_id) {
@@ -891,6 +720,9 @@ void BiDirectional::joinLabels() {
         for (auto fwd_iter = fwd_search_ptr_->efficient_labels[n].cbegin();
              fwd_iter != fwd_search_ptr_->efficient_labels[n].cend();
              ++fwd_iter) {
+          if (timeLimitExceeded()) {
+            return;
+          }
           const labelling::Label& fwd_label = *fwd_iter;
           // if bound check fwd_label
           if (fwd_label.resource_consumption[c_res] <= HF &&
@@ -912,6 +744,9 @@ void BiDirectional::joinLabels() {
                          bwd_search_ptr_->efficient_labels[m].cbegin();
                      bwd_iter != bwd_search_ptr_->efficient_labels[m].cend();
                      ++bwd_iter) {
+                  if (timeLimitExceeded()) {
+                    return;
+                  }
                   const labelling::Label& bwd_label = *bwd_iter;
                   if (bwd_label.resource_consumption[c_res] >= HF &&
                       (fwd_label.weight + edge_weight + bwd_label.weight <= UB) &&
@@ -965,7 +800,6 @@ void BiDirectional::joinLabels() {
         }
       }
     }
-  }
 } // end joinLabels
 
 } // namespace bidirectional

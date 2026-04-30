@@ -42,4 +42,3 @@ cdef extern from "bidirectional.h" namespace "bidirectional":
         void setKCycleElimination(const int& k)
         void setTimeWindows(const bool& enable, const int& res_idx)
         void setBitwiseElementary(const bool& enable, const int& max_nodes_in)
-        void setParallel(const bool& enable, const int& threads)

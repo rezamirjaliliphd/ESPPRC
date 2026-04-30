@@ -68,7 +68,7 @@ result = solve_espprc_enhanced(
 ```
 
 ### Bitwise Elementary (Fast for Small Graphs)
-**Auto-enabled for graphs with ≤64 nodes when elementary=True**
+**Available for graphs with ≤64 nodes when `use_bitwise=True`**
 ```python
 result = solve_espprc_enhanced(
     G, min_res, max_res, cg_cut_pi,
@@ -134,15 +134,13 @@ for path in result['all_feasible_paths']:
 | `k_cycle_elimination` | int | 0 | Eliminate k-cycles (0=off, 2,3,...) |
 | `use_time_windows` | bool | False | Enable time window constraints |
 | `time_window_res_idx` | int | 0 | Resource index for time |
-| `use_bitwise` | bool | False | Use bitwise elementary (auto for small graphs) |
+| `use_bitwise` | bool | False | Use bitwise elementary for graphs with <=64 nodes |
 | `bounds_pruning` | bool | False | Use bounds pruning |
 | `direction` | str | "both" | Search direction ("forward"/"backward"/"both") |
 | `method` | str | "unprocessed" | Direction selection method |
 | `time_limit` | float | None | Time limit in seconds |
 | `threshold` | float | None | Cost threshold to stop search |
 | `get_all_path` | bool | False | Return all feasible paths |
-| `enable_parallel` | bool | False | Enable parallel processing |
-| `num_threads` | int | 1 | Number of threads |
 
 ## Performance Tips
 

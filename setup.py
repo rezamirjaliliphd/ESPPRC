@@ -37,10 +37,9 @@ if is_windows:
         "/O2", 
         "/EHsc", 
         "/utf-8", 
-        "/bigobj",
-        "/openmp"  # OpenMP for MSVC
+        "/bigobj"
     ]
-    extra_link_args = ["/openmp"]
+    extra_link_args = []
     
     # vcpkg paths (if available)
     include_dirs.append("C:/vcpkg/installed/x64-windows/include")
@@ -58,16 +57,6 @@ elif is_macos:
         "-Wno-uninitialized"
     ]
     
-    # Try to enable OpenMP (may require libomp from Homebrew)
-    # brew install libomp
-    try:
-        extra_compile_args.append("-Xpreprocessor")
-        extra_compile_args.append("-fopenmp")
-        extra_link_args.append("-lomp")
-        libraries.append("omp")
-    except:
-        print("Warning: OpenMP not available on macOS, building without parallelization")
-    
     # Homebrew paths
     include_dirs.extend([
         "/usr/local/include",
@@ -83,11 +72,10 @@ else:  # Linux
     extra_compile_args = [
         "-std=c++17",
         "-O3",
-        "-fopenmp",  # OpenMP for GCC/Clang
         "-Wno-unused-function",
         "-Wno-uninitialized"
     ]
-    extra_link_args = ["-fopenmp"]
+    extra_link_args = []
     
     # Standard Linux library paths
     library_dirs.extend([

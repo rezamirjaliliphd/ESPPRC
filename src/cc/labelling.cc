@@ -2,9 +2,6 @@
 
 #include <algorithm> // sort, includes, copy_if, push/make_heap
 #include <iostream>  // ostream
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 namespace labelling {
 
@@ -380,87 +377,29 @@ bool runDominanceEff(
     const Label&                     label,
     const bidirectional::Directions& direction,
     const bool&                      elementary) {
-  
-  const int num_labels = efficient_labels_ptr->size();
-  
-  // Only parallelize if enabled and enough labels to justify overhead
-#ifdef _OPENMP
-  const bool use_parallel = label.params_ptr->enable_parallel && num_labels > 50;
-#else
-  const bool use_parallel = false;
-#endif
-  
-  if (use_parallel) {
-#ifdef _OPENMP
-    // Parallel version - check dominance in parallel, then delete sequentially
-    bool dominated = false;
-    std::vector<bool> to_delete(num_labels, false);
-    
-    #pragma omp parallel num_threads(label.params_ptr->num_threads)
-    {
-      bool local_dominated = false;
-      
-      #pragma omp for schedule(static) nowait
-      for (int i = 0; i < num_labels; ++i) {
-        const Label& label2 = (*efficient_labels_ptr)[i];
-        
-        if (label != label2) {
-          if (label.checkDominance(label2, direction)) {
-            to_delete[i] = true;
-          } else if (label2.checkDominance(label, direction)) {
-            local_dominated = true;
-          }
-        }
-      }
-      
-      // Combine dominated flags
-      #pragma omp critical
-      {
-        if (local_dominated) {
-          dominated = true;
-        }
-      }
-    } // end parallel
-    
-    // If label is dominated, no need to delete others
-    if (dominated) {
+  bool dominated = false;
+  for (auto it = efficient_labels_ptr->begin();
+       it != efficient_labels_ptr->end();) {
+    if (label.params_ptr->timeLimitExceeded()) {
       return true;
     }
-    
-    // Sequential deletion from back to front (to maintain indices)
-    for (int i = num_labels - 1; i >= 0; --i) {
-      if (to_delete[i]) {
-        efficient_labels_ptr->erase(efficient_labels_ptr->begin() + i);
+    bool         deleted = false;
+    const Label& label2  = *it;
+    if (label != label2) {
+      // check if label dominates label2
+      if (label.checkDominance(label2, direction)) {
+        it      = efficient_labels_ptr->erase(it);
+        deleted = true;
+      } else if (label2.checkDominance(label, direction)) {
+        dominated = true;
+        break;
       }
     }
-    
-    return false;
-#endif
-  } else {
-    // Sequential version (original)
-    bool dominated = false;
-    for (auto it = efficient_labels_ptr->begin();
-         it != efficient_labels_ptr->end();) {
-      bool         deleted = false;
-      const Label& label2  = *it;
-      if (label != label2) {
-        // check if label dominates label2
-        if (label.checkDominance(label2, direction)) {
-          it      = efficient_labels_ptr->erase(it);
-          deleted = true;
-        } else if (label2.checkDominance(label, direction)) {
-          dominated = true;
-          break;
-        }
-      }
 
-      if (!deleted)
-        ++it;
-    }
-    return dominated;
+    if (!deleted)
+      ++it;
   }
-  
-  return false;
+  return dominated;
 }
 
 Label getNextLabel(

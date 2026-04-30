@@ -388,13 +388,13 @@ def test_get_all_paths():
     except Exception as e:
         print(f"✗ Get all paths test FAILED: {e}")
 
-def test_parallelization():
-    """Test 10: Parallel processing"""
+def test_sequential_repeatability():
+    """Test 10: Sequential repeatability"""
     print("\n" + "="*70)
-    print("TEST 10: Parallel Processing")
+    print("TEST 10: Sequential Repeatability")
     print("="*70)
     
-    G = create_test_graph(n=40, density=0.3)
+    G = create_test_graph(n=22, density=0.25)
     min_res = [0.0, 0.0]
     max_res = [60.0, 60.0]
     cg_cut_pi = [0.0, 0.0]
@@ -406,38 +406,35 @@ def test_parallelization():
         start = time.time()
         result_seq = solve_espprc_enhanced(
             G, min_res, max_res, cg_cut_pi,
-            source=0, sink=39,
-            enable_parallel=False
+            source=0, sink=21
         )
         time_seq = time.time() - start
         
-        # Parallel with 4 threads
+        # Repeat the same solve and verify deterministic cost.
         start = time.time()
-        result_par = solve_espprc_enhanced(
+        result_repeat = solve_espprc_enhanced(
             G, min_res, max_res, cg_cut_pi,
-            source=0, sink=39,
-            enable_parallel=True,
-            num_threads=8
+            source=0, sink=21
         )
-        time_par = time.time() - start
+        time_repeat = time.time() - start
         
         print(f"✓ Sequential: cost={result_seq['cost']:.2f}, time={time_seq:.3f}s")
-        print(f"✓ Parallel (8 threads): cost={result_par['cost']:.2f}, time={time_par:.3f}s")
+        print(f"✓ Repeat: cost={result_repeat['cost']:.2f}, time={time_repeat:.3f}s")
         
         if time_seq > 0:
-            speedup = time_seq / time_par
-            print(f"✓ Speedup: {speedup:.2f}x")
+            ratio = time_seq / time_repeat
+            print(f"✓ Time ratio: {ratio:.2f}x")
         
         # Verify same solution
-        if abs(result_seq['cost'] - result_par['cost']) < 1e-6:
+        if abs(result_seq['cost'] - result_repeat['cost']) < 1e-6:
             print("✓ Solutions match")
         
-        print("✓ Parallelization test PASSED")
+        print("✓ Sequential repeatability test PASSED")
         
     except ImportError:
         print("✗ Module not built")
     except Exception as e:
-        print(f"✗ Parallelization test FAILED: {e}")
+        print(f"✗ Sequential repeatability test FAILED: {e}")
 
 def test_chvatal_gomory_cuts():
     """Test 11: Chvátal-Gomory cutting plane cuts"""
@@ -506,8 +503,6 @@ def test_combined_features():
             k_cycle_elimination=3,
             bounds_pruning=True,
             use_time_windows=False,
-            enable_parallel=True,
-            num_threads=4,
             get_all_path=True
         )
         
@@ -593,7 +588,7 @@ def run_all_tests():
     test_direction_control()
     test_time_limit_threshold()
     test_get_all_paths()
-    test_parallelization()
+    test_sequential_repeatability()
     test_chvatal_gomory_cuts()
     test_combined_features()
     test_edge_cases()
@@ -606,4 +601,3 @@ def run_all_tests():
 
 if __name__ == "__main__":
     run_all_tests()
-
