@@ -16,7 +16,7 @@ def create_test_graph(n=20, density=0.3, seed=42):
             if i != j and np.random.random() < density:
                 G.add_edge(i, j, 
                           weight=np.random.uniform(1, 10),
-                          res=[np.random.uniform(1, 5), np.random.uniform(1, 5)])
+                          res_cost=[np.random.uniform(1, 5), np.random.uniform(1, 5)])
     return G
 
 def test_basic_functionality():
@@ -26,9 +26,9 @@ def test_basic_functionality():
     print("="*70)
     
     G = nx.DiGraph()
-    G.add_edge(0, 1, weight=2.0, res=[1.0, 2.0])
-    G.add_edge(1, 2, weight=3.0, res=[2.0, 1.0])
-    G.add_edge(0, 2, weight=10.0, res=[5.0, 5.0])
+    G.add_edge(0, 1, weight=2.0, res_cost=[1.0, 2.0])
+    G.add_edge(1, 2, weight=3.0, res_cost=[2.0, 1.0])
+    G.add_edge(0, 2, weight=10.0, res_cost=[5.0, 5.0])
     
     min_res = [0.0, 0.0]
     max_res = [10.0, 10.0]
@@ -64,10 +64,10 @@ def test_elementary_constraint():
     
     # Create graph with cycle
     G = nx.DiGraph()
-    G.add_edge(0, 1, weight=1.0, res=[1.0, 0.0])
-    G.add_edge(1, 2, weight=1.0, res=[1.0, 0.0])
-    G.add_edge(2, 1, weight=0.5, res=[0.5, 0.0])  # Creates cycle
-    G.add_edge(2, 3, weight=1.0, res=[1.0, 0.0])
+    G.add_edge(0, 1, weight=1.0, res_cost=[1.0, 0.0])
+    G.add_edge(1, 2, weight=1.0, res_cost=[1.0, 0.0])
+    G.add_edge(2, 1, weight=0.5, res_cost=[0.5, 0.0])  # Creates cycle
+    G.add_edge(2, 3, weight=1.0, res_cost=[1.0, 0.0])
     
     min_res = [0.0, 0.0]
     max_res = [10.0, 10.0]
@@ -146,10 +146,10 @@ def test_time_windows():
     
     G = nx.DiGraph()
     # Time is first resource - create path where shortcuts violate time windows
-    G.add_edge(0, 1, weight=1.0, res=[2.0, 1.0])  # Travel time = 2
-    G.add_edge(1, 2, weight=1.0, res=[2.0, 1.0])  # Travel time = 2
-    G.add_edge(2, 3, weight=1.0, res=[2.0, 1.0])  # Travel time = 2
-    G.add_edge(0, 3, weight=0.5, res=[1.0, 3.0])  # Fast but high resource
+    G.add_edge(0, 1, weight=1.0, res_cost=[2.0, 1.0])  # Travel time = 2
+    G.add_edge(1, 2, weight=1.0, res_cost=[2.0, 1.0])  # Travel time = 2
+    G.add_edge(2, 3, weight=1.0, res_cost=[2.0, 1.0])  # Travel time = 2
+    G.add_edge(0, 3, weight=0.5, res_cost=[1.0, 3.0])  # Fast but high resource
     
     min_res = [0.0, 0.0]
     max_res = [10.0, 10.0]
@@ -355,11 +355,11 @@ def test_get_all_paths():
     
     G = nx.DiGraph()
     # Create graph with multiple paths
-    G.add_edge(0, 1, weight=1.0, res=[1.0, 1.0])
-    G.add_edge(0, 2, weight=1.5, res=[1.0, 1.0])
-    G.add_edge(1, 3, weight=1.0, res=[1.0, 1.0])
-    G.add_edge(2, 3, weight=1.0, res=[1.0, 1.0])
-    G.add_edge(1, 2, weight=0.5, res=[0.5, 0.5])
+    G.add_edge(0, 1, weight=1.0, res_cost=[1.0, 1.0])
+    G.add_edge(0, 2, weight=1.5, res_cost=[1.0, 1.0])
+    G.add_edge(1, 3, weight=1.0, res_cost=[1.0, 1.0])
+    G.add_edge(2, 3, weight=1.0, res_cost=[1.0, 1.0])
+    G.add_edge(1, 2, weight=0.5, res_cost=[0.5, 0.5])
     
     min_res = [0.0, 0.0]
     max_res = [10.0, 10.0]
@@ -443,9 +443,9 @@ def test_chvatal_gomory_cuts():
     print("="*70)
     
     G = nx.DiGraph()
-    G.add_edge(0, 1, weight=1.0, res=[2.5, 1.0])
-    G.add_edge(1, 2, weight=1.0, res=[3.7, 1.0])
-    G.add_edge(2, 3, weight=1.0, res=[1.2, 1.0])
+    G.add_edge(0, 1, weight=1.0, res_cost=[2.5, 1.0])
+    G.add_edge(1, 2, weight=1.0, res_cost=[3.7, 1.0])
+    G.add_edge(2, 3, weight=1.0, res_cost=[1.2, 1.0])
     
     min_res = [0.0, 0.0]
     max_res = [20.0, 20.0]
@@ -543,7 +543,7 @@ def test_edge_cases():
         
         # Single edge
         G_single = nx.DiGraph()
-        G_single.add_edge(0, 1, weight=5.0, res=[2.0])
+        G_single.add_edge(0, 1, weight=5.0, res_cost=[2.0])
         
         result = solve_espprc_enhanced(
             G_single, [0.0], [10.0], [0.0],
@@ -553,8 +553,8 @@ def test_edge_cases():
         
         # Tight resource constraints
         G = nx.DiGraph()
-        G.add_edge(0, 1, weight=1.0, res=[5.0])
-        G.add_edge(1, 2, weight=1.0, res=[5.0])
+        G.add_edge(0, 1, weight=1.0, res_cost=[5.0])
+        G.add_edge(1, 2, weight=1.0, res_cost=[5.0])
         
         result = solve_espprc_enhanced(
             G, [0.0], [8.0], [0.0],  # Tight: can't reach sink

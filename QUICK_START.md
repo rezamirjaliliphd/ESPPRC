@@ -14,8 +14,8 @@ from espprc import solve_espprc_enhanced
 
 # Create your graph
 G = nx.DiGraph()
-G.add_edge(0, 1, weight=2.0, res=[1.0, 2.0])
-G.add_edge(1, 2, weight=3.0, res=[2.0, 1.0])
+G.add_edge(0, 1, weight=2.0, res_cost=[1.0, 2.0])
+G.add_edge(1, 2, weight=3.0, res_cost=[2.0, 1.0])
 
 # Define resource limits
 min_res = [0.0, 0.0]
@@ -123,7 +123,7 @@ for path in result['all_feasible_paths']:
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `G` | NetworkX DiGraph | Required | Graph with 'weight' and 'res' edge attributes |
+| `G` | NetworkX DiGraph | Required | Graph with 'weight' and 'res_cost' edge attributes |
 | `min_res` | list[float] | Required | Minimum resource consumption |
 | `max_res` | list[float] | Required | Maximum resource consumption |
 | `cg_cut_pi` | list[float] | Required | Chvátal-Gomory multipliers (can be zeros) |

@@ -97,8 +97,8 @@ from espprc import solve_espprc_enhanced
 
 # Create graph
 G = nx.DiGraph()
-G.add_edge(0, 1, weight=2.0, res=[1.0, 2.0])
-G.add_edge(1, 2, weight=3.0, res=[2.0, 1.0])
+G.add_edge(0, 1, weight=2.0, res_cost=[1.0, 2.0])
+G.add_edge(1, 2, weight=3.0, res_cost=[2.0, 1.0])
 
 # Solve with default settings
 result = solve_espprc_enhanced(

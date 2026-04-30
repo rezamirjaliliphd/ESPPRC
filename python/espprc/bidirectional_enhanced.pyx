@@ -51,7 +51,7 @@ def solve_espprc_enhanced(
     G : networkx.DiGraph
         Edge attributes required:
           - 'weight' : float
-          - 'res'    : sequence[float] (len == len(max_res))
+          - 'res_cost' : sequence[float] (len == len(max_res))
         Nodes may be any hashable; if not ints, we remap internally.
     min_res, max_res, cg_cut_pi : sequence[float]
     source, sink : node labels in G
@@ -121,7 +121,7 @@ def solve_espprc_enhanced(
     # Count valid edges
     cdef int nE = 0
     for u, v, data in G.edges(data=True):
-        if 'weight' in data and 'res' in data:
+        if 'weight' in data and 'res_cost' in data:
             nE += 1
 
     cdef vector[double] v_min = _vecd(min_res)
@@ -189,15 +189,15 @@ def solve_espprc_enhanced(
     # Add edges
     cdef vector[double] resvec
     for u, v, data in G.edges(data=True):
-        if 'weight' not in data or 'res' not in data:
+        if 'weight' not in data or 'res_cost' not in data:
             continue
         ru = id_of[u]
         rv = id_of[v]
         w = float(data['weight'])
-        r = data['res']
+        r = data['res_cost']
         if len(r) != v_max.size():
             del solver
-            raise ValueError(f"edge ({u},{v}) has len(res)={len(r)} "
+            raise ValueError(f"edge ({u},{v}) has len(res_cost)={len(r)} "
                              f"but len(max_res)={v_max.size()}")
         resvec.clear()
         for t in r:
