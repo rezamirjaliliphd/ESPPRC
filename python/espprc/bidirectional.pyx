@@ -74,11 +74,7 @@ def solve_espprc(G,
     source_id = id_of[source]
     sink_id   = id_of[sink]
 
-<<<<<<< HEAD
-    # count valid edges (must carry weight & res_cost)
-=======
     # count valid edges (must carry weight and resource costs)
->>>>>>> a70663c (hey)
     cdef int nE = 0
     for u, v, data in G.edges(data=True):
         if 'weight' in data and 'res_cost' in data:
@@ -124,7 +120,7 @@ def solve_espprc(G,
     cdef vector[double] cons = solver.getConsumedResources()
     cdef double tot = solver.getTotalCost()
     # deep copy all feasible paths to Python
-    
+
     cdef vector[int] row
     path = [p[i] for i in range(p.size())]
     resources = [cons[i] for i in range(cons.size())]
@@ -132,7 +128,7 @@ def solve_espprc(G,
     all_paths = []
     if get_all_path:
     # deep copy all feasible paths to Python
-        allp =  solver.getAllFeasiblePaths() 
+        allp =  solver.getAllFeasiblePaths()
         for i in range(allp.size()):
             row.clear()
             row = allp[i]

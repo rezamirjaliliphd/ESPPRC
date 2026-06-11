@@ -151,41 +151,37 @@ def solve_espprc_enhanced(
     # Set parameters
     solver.setElementary(elementary)
     solver.setTwoCycleElimination(two_cycle_elimination)
-    
+
     # K-cycle elimination
     if k_cycle_elimination > 0:
         solver.setKCycleElimination(k_cycle_elimination)
-    
+
     solver.setBoundsPruning(bounds_pruning)
     solver.setMethod(method.encode('utf-8'))
-    
+
     if direction.lower() in ["forward", "backward"]:
         solver.setDirection(direction.lower().encode('utf-8'))
-    
+
     if time_limit is not None:
         solver.setTimeLimit(float(time_limit))
-    
+
     if threshold is not None:
         solver.setThreshold(float(threshold))
-    
+
     solver.setFindCriticalRes(find_critical_res)
     solver.setCriticalRes(critical_res)
-    
+
     # Time windows
     if use_time_windows:
         solver.setTimeWindows(True, time_window_res_idx)
-    
-<<<<<<< HEAD
-    # Bitwise elementary
-=======
+
     # Bitwise elementary is only valid for the uint64 mask range.
->>>>>>> a70663c (hey)
     if use_bitwise:
         if nV > 64:
             del solver
             raise ValueError("use_bitwise=True supports at most 64 nodes")
         solver.setBitwiseElementary(True, nV)
-    
+
     # Add nodes
     cdef vector[int] v_nodes = _veci(range(nV))
     solver.addNodes(v_nodes)
@@ -210,21 +206,21 @@ def solve_espprc_enhanced(
 
     # Solve
     solver.run()
-    
+
     # Extract results
     cdef vector[int] p = solver.getPath()
     cdef vector[double] cons = solver.getConsumedResources()
     cdef double tot = solver.getTotalCost()
-    
+
     path = [p[i] for i in range(p.size())]
     resources = [cons[i] for i in range(cons.size())]
-    
+
     cdef vector[vector[int]] allp
     all_paths = []
     cdef vector[int] row
     if get_all_path:
         allp = solver.getAllFeasiblePaths()
-        
+
         for i in range(allp.size()):
             row = allp[i]
             all_paths.append([row[j] for j in range(row.size())])

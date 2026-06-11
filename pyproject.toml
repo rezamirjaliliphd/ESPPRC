@@ -1,11 +1,6 @@
 [build-system]
-<<<<<<< HEAD
-requires = ["setuptools>=75", "wheel", "Cython>=3.0"]
-build-backend = "setuptools.build_meta"
-=======
 requires = ["scikit-build-core>=0.10"]
 build-backend = "scikit_build_core.build"
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
 
 [project]
 name = "espprc"
@@ -15,46 +10,9 @@ requires-python = ">=3.9"
 authors = [{name = "Reza Mirjalili"}]
 dependencies = ["networkx>=2.5"]
 
-<<<<<<< HEAD
-[tool.setuptools]
-packages = ["espprc"]
-
-[tool.setuptools.package-dir]
-espprc = "python/espprc"
-
-[tool.setuptools.package-data]
-espprc = ["*.pxd", "*.pyx"]
-
-[[tool.setuptools.ext-modules]]
-name = "espprc.bidirectional_enhanced"
-sources = [
-  "python/espprc/bidirectional_enhanced.pyx",
-  "src/cc/bidirectional.cc",
-  "src/cc/digraph.cc",
-  "src/cc/labelling.cc",
-  "src/cc/preprocessing.cc",
-  "src/cc/ref_callback.cc",
-  "src/cc/search.cc"
-]
-language = "c++"
-
-include-dirs = [".", "src/cc", "C:/vcpkg/installed/x64-windows/include"]
-
-# <-- key fix: tell linker where libs are
-library-dirs = [
-  "C:/vcpkg/installed/x64-windows/lib",
-  "C:/vcpkg/installed/x64-windows/debug/lib"
-]
-
-# <-- key fix: correct library name (file is lemon.lib)
-libraries = ["lemon", "fmt"]
-
-extra-compile-args = ["/std:c++17", "/O2", "/EHsc", "/utf-8", "/bigobj"]
-=======
 [project.optional-dependencies]
 test = ["numpy"]
 
 [tool.scikit-build]
 cmake.version = ">=3.22"
 wheel.packages = []
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)

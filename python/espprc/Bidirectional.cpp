@@ -2920,7 +2920,7 @@ return 0;
 
 /* "string.from_py":12
  *     cdef const char* __Pyx_PyObject_AsStringAndSize(object, Py_ssize_t*) except NULL
- * 
+ *
  * @cname("__pyx_convert_string_from_py_6libcpp_6string_std__in_string")             # <<<<<<<<<<<<<<
  * cdef string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(object o) except *:
  *     cdef Py_ssize_t length = 0
@@ -2950,7 +2950,7 @@ static std::string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(P
  *     cdef Py_ssize_t length = 0
  *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)             # <<<<<<<<<<<<<<
  *     return string(data, <size_t> length)
- * 
+ *
 */
   __pyx_t_1 = __Pyx_PyObject_AsStringAndSize(__pyx_v_o, (&__pyx_v_length)); if (unlikely(__pyx_t_1 == ((void *)NULL))) __PYX_ERR(1, 15, __pyx_L1_error)
   __pyx_v_data = __pyx_t_1;
@@ -2959,7 +2959,7 @@ static std::string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(P
  *     cdef Py_ssize_t length = 0
  *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)
  *     return string(data, <size_t> length)             # <<<<<<<<<<<<<<
- * 
+ *
 */
   try {
     __pyx_t_2 = std::string(__pyx_v_data, ((size_t)__pyx_v_length));
@@ -2972,7 +2972,7 @@ static std::string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(P
 
   /* "string.from_py":12
  *     cdef const char* __Pyx_PyObject_AsStringAndSize(object, Py_ssize_t*) except NULL
- * 
+ *
  * @cname("__pyx_convert_string_from_py_6libcpp_6string_std__in_string")             # <<<<<<<<<<<<<<
  * cdef string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(object o) except *:
  *     cdef Py_ssize_t length = 0
@@ -2988,7 +2988,7 @@ static std::string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(P
 
 /* "espprc/Bidirectional.pyx":11
  * from .Bidirectional cimport BiDirectional
- * 
+ *
  * cdef inline vector[double] _vecd(object seq):             # <<<<<<<<<<<<<<
  *     cdef vector[double] v
  *     for x in seq:
@@ -3073,7 +3073,7 @@ static CYTHON_INLINE std::vector<double>  __pyx_f_6espprc_13Bidirectional__vecd(
  *     for x in seq:
  *         v.push_back(<double>x)             # <<<<<<<<<<<<<<
  *     return v
- * 
+ *
 */
     __pyx_t_5 = __Pyx_PyFloat_AsDouble(__pyx_v_x); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L1_error)
     try {
@@ -3097,7 +3097,7 @@ static CYTHON_INLINE std::vector<double>  __pyx_f_6espprc_13Bidirectional__vecd(
  *     for x in seq:
  *         v.push_back(<double>x)
  *     return v             # <<<<<<<<<<<<<<
- * 
+ *
  * cdef inline vector[int] _veci(object seq):
 */
   __pyx_r = __pyx_v_v;
@@ -3105,7 +3105,7 @@ static CYTHON_INLINE std::vector<double>  __pyx_f_6espprc_13Bidirectional__vecd(
 
   /* "espprc/Bidirectional.pyx":11
  * from .Bidirectional cimport BiDirectional
- * 
+ *
  * cdef inline vector[double] _vecd(object seq):             # <<<<<<<<<<<<<<
  *     cdef vector[double] v
  *     for x in seq:
@@ -3125,7 +3125,7 @@ static CYTHON_INLINE std::vector<double>  __pyx_f_6espprc_13Bidirectional__vecd(
 
 /* "espprc/Bidirectional.pyx":17
  *     return v
- * 
+ *
  * cdef inline vector[int] _veci(object seq):             # <<<<<<<<<<<<<<
  *     cdef vector[int] v
  *     for x in seq:
@@ -3210,7 +3210,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_6espprc_13Bidirectional__veci(PyO
  *     for x in seq:
  *         v.push_back(<int>x)             # <<<<<<<<<<<<<<
  *     return v
- * 
+ *
 */
     __pyx_t_5 = __Pyx_PyLong_As_int(__pyx_v_x); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 20, __pyx_L1_error)
     try {
@@ -3234,7 +3234,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_6espprc_13Bidirectional__veci(PyO
  *     for x in seq:
  *         v.push_back(<int>x)
  *     return v             # <<<<<<<<<<<<<<
- * 
+ *
  * def solve_espprc(
 */
   __pyx_r = __pyx_v_v;
@@ -3242,7 +3242,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_6espprc_13Bidirectional__veci(PyO
 
   /* "espprc/Bidirectional.pyx":17
  *     return v
- * 
+ *
  * cdef inline vector[int] _veci(object seq):             # <<<<<<<<<<<<<<
  *     cdef vector[int] v
  *     for x in seq:
@@ -3262,14 +3262,14 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_6espprc_13Bidirectional__veci(PyO
 
 /* "espprc/Bidirectional.pyx":23
  *     return v
- * 
+ *
  * def solve_espprc(             # <<<<<<<<<<<<<<
  *     G,
  *     min_res,
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6espprc_13Bidirectional_1solve_espprc(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_6espprc_13Bidirectional_1solve_espprc(PyObject *__pyx_self,
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -3278,7 +3278,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 ); /*proto*/
 PyDoc_STRVAR(__pyx_doc_6espprc_13Bidirectional_solve_espprc, "\n    Solve an ESPPRC instance with the bidirectional labeling solver.\n\n    Parameters\n    ----------\n    G : networkx.DiGraph\n        Edge attributes required:\n          - 'weight' : float\n          - 'res_cost' : sequence[float] (len == len(max_res))\n        Nodes may be any hashable; if not ints, we remap internally.\n    min_res, max_res, cg_cut_pi : sequence[float]\n    source, sink : node labels in G\n    get_all_path : bool, default False\n        Return all feasible paths found\n    elementary : bool, default True\n        Enforce elementary path constraint\n    two_cycle_elimination : bool, default False\n        Eliminate 2-cycles for non-elementary paths\n    k_cycle_elimination : int, default 0\n        K-cycle elimination (0=disabled, 2=2-cycle, 3=3-cycle, etc.)\n        Literature suggests k=3 for optimal tradeoff\n    bounds_pruning : bool, default False\n        Use bounds pruning for label dominance\n    direction : str, default \"both\"\n        Search direction: \"forward\", \"backward\", or \"both\"\n    method : str, default \"unprocessed\"\n        Direction selection method: \"unprocessed\", \"processed\", \"generated\"\n    time_limit : float, optional\n        Time limit in seconds\n    threshold : float, optional\n        Stop when path cost <= threshold found\n    find_critical_res : bool, default False\n        Automatically find critical resource\n    critical_res : int, default 0\n        Index of critical resource\n    use_time_windows : bool, default False\n        Enable time window constraints\n    time_window_res_idx : int, default 0\n        Resource index for time (when time windows enabled)\n    use_bitwise : bool, default False\n        Use bitwise operations for elementary checking. Supported for |V| <= 64.\n    enable_parallel : bool, default False\n        Enable parallel label processing\n    num_threads : int, default 1\n        Number of threads for parallel processing\n\n    Returns\n    -------\n    dict with ke""ys:\n      path               : list[int]        (node ids after remap)\n      resources          : list[float]\n      cost               : float\n      all_feasible_paths : list[list[int]]\n      id_to_node         : list[original_node_label]  (index == internal id)\n    ");
 static PyMethodDef __pyx_mdef_6espprc_13Bidirectional_1solve_espprc = {"solve_espprc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_6espprc_13Bidirectional_1solve_espprc, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_6espprc_13Bidirectional_solve_espprc};
-static PyObject *__pyx_pw_6espprc_13Bidirectional_1solve_espprc(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_6espprc_13Bidirectional_1solve_espprc(PyObject *__pyx_self,
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -3500,7 +3500,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 
   /* "espprc/Bidirectional.pyx":23
  *     return v
- * 
+ *
  * def solve_espprc(             # <<<<<<<<<<<<<<
  *     G,
  *     min_res,
@@ -3646,7 +3646,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *         import networkx as nx
  *     except Exception:             # <<<<<<<<<<<<<<
  *         raise RuntimeError("networkx is required")
- * 
+ *
 */
     __pyx_t_6 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
     if (__pyx_t_6) {
@@ -3660,7 +3660,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *         import networkx as nx
  *     except Exception:
  *         raise RuntimeError("networkx is required")             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Build node id map
 */
       __pyx_t_10 = NULL;
@@ -3695,7 +3695,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   }
 
   /* "espprc/Bidirectional.pyx":109
- * 
+ *
  *     # Build node id map
  *     nodes = list(G.nodes())             # <<<<<<<<<<<<<<
  *     nV = len(nodes)
@@ -3742,7 +3742,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     if nV == 0:
  *         return {"path": [], "resources": [], "cost": 0.0,             # <<<<<<<<<<<<<<
  *                 "all_feasible_paths": [], "id_to_node": []}
- * 
+ *
 */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_7 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 112, __pyx_L1_error)
@@ -3761,7 +3761,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     if nV == 0:
  *         return {"path": [], "resources": [], "cost": 0.0,
  *                 "all_feasible_paths": [], "id_to_node": []}             # <<<<<<<<<<<<<<
- * 
+ *
  *     id_of = {}
 */
     __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 113, __pyx_L1_error)
@@ -3787,7 +3787,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":115
  *                 "all_feasible_paths": [], "id_to_node": []}
- * 
+ *
  *     id_of = {}             # <<<<<<<<<<<<<<
  *     id_to_node = []
  *     cdef size_t i = 0
@@ -3798,7 +3798,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_t_7 = 0;
 
   /* "espprc/Bidirectional.pyx":116
- * 
+ *
  *     id_of = {}
  *     id_to_node = []             # <<<<<<<<<<<<<<
  *     cdef size_t i = 0
@@ -3835,7 +3835,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     for i in range(len(nodes)):
  *         id_of[nodes[i]] = i             # <<<<<<<<<<<<<<
  *         id_to_node.append(nodes[i])
- * 
+ *
 */
     __pyx_t_7 = __Pyx_PyLong_FromSize_t(__pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 119, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
@@ -3846,7 +3846,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     for i in range(len(nodes)):
  *         id_of[nodes[i]] = i
  *         id_to_node.append(nodes[i])             # <<<<<<<<<<<<<<
- * 
+ *
  *     if source not in id_of or sink not in id_of:
 */
     __pyx_t_7 = __Pyx_PyList_GET_ITEM(__pyx_v_nodes, __pyx_v_i);
@@ -3857,10 +3857,10 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":122
  *         id_to_node.append(nodes[i])
- * 
+ *
  *     if source not in id_of or sink not in id_of:             # <<<<<<<<<<<<<<
  *         raise ValueError("source/sink must be nodes of G")
- * 
+ *
 */
   __pyx_t_16 = (__Pyx_PyDict_ContainsTF(__pyx_v_source, __pyx_v_id_of, Py_NE)); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 122, __pyx_L1_error)
   if (!__pyx_t_16) {
@@ -3874,10 +3874,10 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   if (unlikely(__pyx_t_13)) {
 
     /* "espprc/Bidirectional.pyx":123
- * 
+ *
  *     if source not in id_of or sink not in id_of:
  *         raise ValueError("source/sink must be nodes of G")             # <<<<<<<<<<<<<<
- * 
+ *
  *     source_id = id_of[source]
 */
     __pyx_t_8 = NULL;
@@ -3895,19 +3895,19 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
     /* "espprc/Bidirectional.pyx":122
  *         id_to_node.append(nodes[i])
- * 
+ *
  *     if source not in id_of or sink not in id_of:             # <<<<<<<<<<<<<<
  *         raise ValueError("source/sink must be nodes of G")
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":125
  *         raise ValueError("source/sink must be nodes of G")
- * 
+ *
  *     source_id = id_of[source]             # <<<<<<<<<<<<<<
  *     sink_id   = id_of[sink]
- * 
+ *
 */
   __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_id_of, __pyx_v_source); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
@@ -3915,10 +3915,10 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_t_7 = 0;
 
   /* "espprc/Bidirectional.pyx":126
- * 
+ *
  *     source_id = id_of[source]
  *     sink_id   = id_of[sink]             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Count valid edges
 */
   __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_id_of, __pyx_v_sink); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 126, __pyx_L1_error)
@@ -3927,7 +3927,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_t_7 = 0;
 
   /* "espprc/Bidirectional.pyx":129
- * 
+ *
  *     # Count valid edges
  *     cdef int nE = 0             # <<<<<<<<<<<<<<
  *     for u, v, data in G.edges(data=True):
@@ -4077,7 +4077,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     for u, v, data in G.edges(data=True):
  *         if 'weight' in data and 'res_cost' in data:             # <<<<<<<<<<<<<<
  *             nE += 1
- * 
+ *
 */
     __pyx_t_16 = (__Pyx_PySequence_ContainsTF(__pyx_mstate_global->__pyx_n_u_weight, __pyx_v_data, Py_EQ)); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 131, __pyx_L1_error)
     if (__pyx_t_16) {
@@ -4094,7 +4094,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     for u, v, data in G.edges(data=True):
  *         if 'weight' in data and 'res_cost' in data:
  *             nE += 1             # <<<<<<<<<<<<<<
- * 
+ *
  *     cdef vector[double] v_min = _vecd(min_res)
 */
       __pyx_v_nE = (__pyx_v_nE + 1);
@@ -4104,7 +4104,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     for u, v, data in G.edges(data=True):
  *         if 'weight' in data and 'res_cost' in data:             # <<<<<<<<<<<<<<
  *             nE += 1
- * 
+ *
 */
     }
 
@@ -4120,7 +4120,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":134
  *             nE += 1
- * 
+ *
  *     cdef vector[double] v_min = _vecd(min_res)             # <<<<<<<<<<<<<<
  *     cdef vector[double] v_max = _vecd(max_res)
  *     cdef vector[double] v_pi  = _vecd(cg_cut_pi)
@@ -4129,11 +4129,11 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_v_v_min = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_20);
 
   /* "espprc/Bidirectional.pyx":135
- * 
+ *
  *     cdef vector[double] v_min = _vecd(min_res)
  *     cdef vector[double] v_max = _vecd(max_res)             # <<<<<<<<<<<<<<
  *     cdef vector[double] v_pi  = _vecd(cg_cut_pi)
- * 
+ *
 */
   __pyx_t_20 = __pyx_f_6espprc_13Bidirectional__vecd(__pyx_v_max_res); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L1_error)
   __pyx_v_v_max = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_20);
@@ -4142,7 +4142,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     cdef vector[double] v_min = _vecd(min_res)
  *     cdef vector[double] v_max = _vecd(max_res)
  *     cdef vector[double] v_pi  = _vecd(cg_cut_pi)             # <<<<<<<<<<<<<<
- * 
+ *
  *     if v_max.size() != v_min.size():
 */
   __pyx_t_20 = __pyx_f_6espprc_13Bidirectional__vecd(__pyx_v_cg_cut_pi); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L1_error)
@@ -4150,7 +4150,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":138
  *     cdef vector[double] v_pi  = _vecd(cg_cut_pi)
- * 
+ *
  *     if v_max.size() != v_min.size():             # <<<<<<<<<<<<<<
  *         raise ValueError("len(max_res) must equal len(min_res)")
  *     if v_max.size() == 0:
@@ -4159,7 +4159,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   if (unlikely(__pyx_t_13)) {
 
     /* "espprc/Bidirectional.pyx":139
- * 
+ *
  *     if v_max.size() != v_min.size():
  *         raise ValueError("len(max_res) must equal len(min_res)")             # <<<<<<<<<<<<<<
  *     if v_max.size() == 0:
@@ -4180,7 +4180,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
     /* "espprc/Bidirectional.pyx":138
  *     cdef vector[double] v_pi  = _vecd(cg_cut_pi)
- * 
+ *
  *     if v_max.size() != v_min.size():             # <<<<<<<<<<<<<<
  *         raise ValueError("len(max_res) must equal len(min_res)")
  *     if v_max.size() == 0:
@@ -4510,7 +4510,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *             raise ValueError("resource bounds must be finite numbers")
  *         if v_min[i] > v_max[i]:             # <<<<<<<<<<<<<<
  *             raise ValueError(f"min_res[{i}] cannot be greater than max_res[{i}]")
- * 
+ *
 */
     __pyx_t_16 = ((__pyx_v_v_min[__pyx_v_i]) > (__pyx_v_v_max[__pyx_v_i]));
     if (unlikely(__pyx_t_16)) {
@@ -4519,7 +4519,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *             raise ValueError("resource bounds must be finite numbers")
  *         if v_min[i] > v_max[i]:
  *             raise ValueError(f"min_res[{i}] cannot be greater than max_res[{i}]")             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Construct solver
 */
       __pyx_t_9 = NULL;
@@ -4552,7 +4552,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *             raise ValueError("resource bounds must be finite numbers")
  *         if v_min[i] > v_max[i]:             # <<<<<<<<<<<<<<
  *             raise ValueError(f"min_res[{i}] cannot be greater than max_res[{i}]")
- * 
+ *
 */
     }
   }
@@ -4561,18 +4561,18 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     # Construct solver
  *     cdef BiDirectional* solver = new BiDirectional(
  *         nV, nE, source_id, sink_id, v_max, v_min, v_pi)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Set parameters
 */
   __pyx_t_6 = __Pyx_PyLong_As_int(__pyx_v_source_id); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 156, __pyx_L1_error)
   __pyx_t_26 = __Pyx_PyLong_As_int(__pyx_v_sink_id); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 156, __pyx_L1_error)
 
   /* "espprc/Bidirectional.pyx":155
- * 
+ *
  *     # Construct solver
  *     cdef BiDirectional* solver = new BiDirectional(             # <<<<<<<<<<<<<<
  *         nV, nE, source_id, sink_id, v_max, v_min, v_pi)
- * 
+ *
 */
   try {
     __pyx_t_27 = new bidirectional::BiDirectional(__pyx_v_nV, __pyx_v_nE, __pyx_t_6, __pyx_t_26, __pyx_v_v_max, __pyx_v_v_min, __pyx_v_v_pi);
@@ -4583,11 +4583,11 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_v_solver = __pyx_t_27;
 
   /* "espprc/Bidirectional.pyx":159
- * 
+ *
  *     # Set parameters
  *     solver.setElementary(elementary)             # <<<<<<<<<<<<<<
  *     solver.setTwoCycleElimination(two_cycle_elimination)
- * 
+ *
 */
   __pyx_t_28 = __Pyx_PyObject_IsTrue(__pyx_v_elementary); if (unlikely((__pyx_t_28 == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(0, 159, __pyx_L1_error)
   __pyx_v_solver->setElementary(__pyx_t_28);
@@ -4596,18 +4596,18 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     # Set parameters
  *     solver.setElementary(elementary)
  *     solver.setTwoCycleElimination(two_cycle_elimination)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # K-cycle elimination
 */
   __pyx_t_28 = __Pyx_PyObject_IsTrue(__pyx_v_two_cycle_elimination); if (unlikely((__pyx_t_28 == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(0, 160, __pyx_L1_error)
   __pyx_v_solver->setTwoCycleElimination(__pyx_t_28);
 
   /* "espprc/Bidirectional.pyx":163
- * 
+ *
  *     # K-cycle elimination
  *     if k_cycle_elimination > 0:             # <<<<<<<<<<<<<<
  *         solver.setKCycleElimination(k_cycle_elimination)
- * 
+ *
 */
   __pyx_t_4 = PyObject_RichCompare(__pyx_v_k_cycle_elimination, __pyx_mstate_global->__pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 163, __pyx_L1_error)
   __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 163, __pyx_L1_error)
@@ -4618,36 +4618,36 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     # K-cycle elimination
  *     if k_cycle_elimination > 0:
  *         solver.setKCycleElimination(k_cycle_elimination)             # <<<<<<<<<<<<<<
- * 
+ *
  *     solver.setBoundsPruning(bounds_pruning)
 */
     __pyx_t_26 = __Pyx_PyLong_As_int(__pyx_v_k_cycle_elimination); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 164, __pyx_L1_error)
     __pyx_v_solver->setKCycleElimination(__pyx_t_26);
 
     /* "espprc/Bidirectional.pyx":163
- * 
+ *
  *     # K-cycle elimination
  *     if k_cycle_elimination > 0:             # <<<<<<<<<<<<<<
  *         solver.setKCycleElimination(k_cycle_elimination)
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":166
  *         solver.setKCycleElimination(k_cycle_elimination)
- * 
+ *
  *     solver.setBoundsPruning(bounds_pruning)             # <<<<<<<<<<<<<<
  *     solver.setMethod(method.encode('utf-8'))
- * 
+ *
 */
   __pyx_t_28 = __Pyx_PyObject_IsTrue(__pyx_v_bounds_pruning); if (unlikely((__pyx_t_28 == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L1_error)
   __pyx_v_solver->setBoundsPruning(__pyx_t_28);
 
   /* "espprc/Bidirectional.pyx":167
- * 
+ *
  *     solver.setBoundsPruning(bounds_pruning)
  *     solver.setMethod(method.encode('utf-8'))             # <<<<<<<<<<<<<<
- * 
+ *
  *     if direction.lower() in ["forward", "backward"]:
 */
   __pyx_t_10 = __pyx_v_method;
@@ -4666,10 +4666,10 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":169
  *     solver.setMethod(method.encode('utf-8'))
- * 
+ *
  *     if direction.lower() in ["forward", "backward"]:             # <<<<<<<<<<<<<<
  *         solver.setDirection(direction.lower().encode('utf-8'))
- * 
+ *
 */
   __pyx_t_10 = __pyx_v_direction;
   __Pyx_INCREF(__pyx_t_10);
@@ -4695,10 +4695,10 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   if (__pyx_t_13) {
 
     /* "espprc/Bidirectional.pyx":170
- * 
+ *
  *     if direction.lower() in ["forward", "backward"]:
  *         solver.setDirection(direction.lower().encode('utf-8'))             # <<<<<<<<<<<<<<
- * 
+ *
  *     if time_limit is not None:
 */
     __pyx_t_7 = __pyx_v_direction;
@@ -4728,28 +4728,28 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
     /* "espprc/Bidirectional.pyx":169
  *     solver.setMethod(method.encode('utf-8'))
- * 
+ *
  *     if direction.lower() in ["forward", "backward"]:             # <<<<<<<<<<<<<<
  *         solver.setDirection(direction.lower().encode('utf-8'))
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":172
  *         solver.setDirection(direction.lower().encode('utf-8'))
- * 
+ *
  *     if time_limit is not None:             # <<<<<<<<<<<<<<
  *         solver.setTimeLimit(float(time_limit))
- * 
+ *
 */
   __pyx_t_13 = (__pyx_v_time_limit != Py_None);
   if (__pyx_t_13) {
 
     /* "espprc/Bidirectional.pyx":173
- * 
+ *
  *     if time_limit is not None:
  *         solver.setTimeLimit(float(time_limit))             # <<<<<<<<<<<<<<
- * 
+ *
  *     if threshold is not None:
 */
     __pyx_t_30 = __Pyx_PyObject_AsDouble(__pyx_v_time_limit); if (unlikely(__PYX_CHECK_FLOAT_EXCEPTION(__pyx_t_30, ((double)((double)-1))) && PyErr_Occurred())) __PYX_ERR(0, 173, __pyx_L1_error)
@@ -4757,28 +4757,28 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
     /* "espprc/Bidirectional.pyx":172
  *         solver.setDirection(direction.lower().encode('utf-8'))
- * 
+ *
  *     if time_limit is not None:             # <<<<<<<<<<<<<<
  *         solver.setTimeLimit(float(time_limit))
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":175
  *         solver.setTimeLimit(float(time_limit))
- * 
+ *
  *     if threshold is not None:             # <<<<<<<<<<<<<<
  *         solver.setThreshold(float(threshold))
- * 
+ *
 */
   __pyx_t_13 = (__pyx_v_threshold != Py_None);
   if (__pyx_t_13) {
 
     /* "espprc/Bidirectional.pyx":176
- * 
+ *
  *     if threshold is not None:
  *         solver.setThreshold(float(threshold))             # <<<<<<<<<<<<<<
- * 
+ *
  *     solver.setFindCriticalRes(find_critical_res)
 */
     __pyx_t_30 = __Pyx_PyObject_AsDouble(__pyx_v_threshold); if (unlikely(__PYX_CHECK_FLOAT_EXCEPTION(__pyx_t_30, ((double)((double)-1))) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L1_error)
@@ -4786,39 +4786,39 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
     /* "espprc/Bidirectional.pyx":175
  *         solver.setTimeLimit(float(time_limit))
- * 
+ *
  *     if threshold is not None:             # <<<<<<<<<<<<<<
  *         solver.setThreshold(float(threshold))
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":178
  *         solver.setThreshold(float(threshold))
- * 
+ *
  *     solver.setFindCriticalRes(find_critical_res)             # <<<<<<<<<<<<<<
  *     solver.setCriticalRes(critical_res)
- * 
+ *
 */
   __pyx_t_28 = __Pyx_PyObject_IsTrue(__pyx_v_find_critical_res); if (unlikely((__pyx_t_28 == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(0, 178, __pyx_L1_error)
   __pyx_v_solver->setFindCriticalRes(__pyx_t_28);
 
   /* "espprc/Bidirectional.pyx":179
- * 
+ *
  *     solver.setFindCriticalRes(find_critical_res)
  *     solver.setCriticalRes(critical_res)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Time windows
 */
   __pyx_t_26 = __Pyx_PyLong_As_int(__pyx_v_critical_res); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 179, __pyx_L1_error)
   __pyx_v_solver->setCriticalRes(__pyx_t_26);
 
   /* "espprc/Bidirectional.pyx":182
- * 
+ *
  *     # Time windows
  *     if use_time_windows:             # <<<<<<<<<<<<<<
  *         solver.setTimeWindows(True, time_window_res_idx)
- * 
+ *
 */
   __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_v_use_time_windows); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 182, __pyx_L1_error)
   if (__pyx_t_13) {
@@ -4827,23 +4827,23 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     # Time windows
  *     if use_time_windows:
  *         solver.setTimeWindows(True, time_window_res_idx)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Bitwise elementary is only valid for the uint64 mask range.
 */
     __pyx_t_26 = __Pyx_PyLong_As_int(__pyx_v_time_window_res_idx); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L1_error)
     __pyx_v_solver->setTimeWindows(1, __pyx_t_26);
 
     /* "espprc/Bidirectional.pyx":182
- * 
+ *
  *     # Time windows
  *     if use_time_windows:             # <<<<<<<<<<<<<<
  *         solver.setTimeWindows(True, time_window_res_idx)
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":186
- * 
+ *
  *     # Bitwise elementary is only valid for the uint64 mask range.
  *     if use_bitwise:             # <<<<<<<<<<<<<<
  *         if nV > 64:
@@ -4876,7 +4876,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *             del solver
  *             raise ValueError("use_bitwise=True supports at most 64 nodes")             # <<<<<<<<<<<<<<
  *         solver.setBitwiseElementary(True, nV)
- * 
+ *
 */
       __pyx_t_9 = NULL;
       __pyx_t_11 = 1;
@@ -4904,13 +4904,13 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *             del solver
  *             raise ValueError("use_bitwise=True supports at most 64 nodes")
  *         solver.setBitwiseElementary(True, nV)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Parallelization
 */
     __pyx_v_solver->setBitwiseElementary(1, __pyx_v_nV);
 
     /* "espprc/Bidirectional.pyx":186
- * 
+ *
  *     # Bitwise elementary is only valid for the uint64 mask range.
  *     if use_bitwise:             # <<<<<<<<<<<<<<
  *         if nV > 64:
@@ -4919,11 +4919,11 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   }
 
   /* "espprc/Bidirectional.pyx":193
- * 
+ *
  *     # Parallelization
  *     if enable_parallel:             # <<<<<<<<<<<<<<
  *         solver.setParallel(True, num_threads)
- * 
+ *
 */
   __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_v_enable_parallel); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 193, __pyx_L1_error)
   if (__pyx_t_13) {
@@ -4932,27 +4932,27 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     # Parallelization
  *     if enable_parallel:
  *         solver.setParallel(True, num_threads)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Add nodes
 */
     __pyx_t_26 = __Pyx_PyLong_As_int(__pyx_v_num_threads); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
     __pyx_v_solver->setParallel(1, __pyx_t_26);
 
     /* "espprc/Bidirectional.pyx":193
- * 
+ *
  *     # Parallelization
  *     if enable_parallel:             # <<<<<<<<<<<<<<
  *         solver.setParallel(True, num_threads)
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":197
- * 
+ *
  *     # Add nodes
  *     cdef vector[int] v_nodes = _veci(range(nV))             # <<<<<<<<<<<<<<
  *     solver.addNodes(v_nodes)
- * 
+ *
 */
   __pyx_t_9 = NULL;
   __pyx_t_10 = PyLong_FromSsize_t(__pyx_v_nV); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 197, __pyx_L1_error)
@@ -4974,7 +4974,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     # Add nodes
  *     cdef vector[int] v_nodes = _veci(range(nV))
  *     solver.addNodes(v_nodes)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Add edges
 */
   __pyx_v_solver->addNodes(__pyx_v_v_nodes);
@@ -5364,7 +5364,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *         for t in r:
  *             resvec.push_back(<double>t)             # <<<<<<<<<<<<<<
  *         solver.addEdge(ru, rv, w, resvec)
- * 
+ *
 */
       __pyx_t_30 = __Pyx_PyFloat_AsDouble(__pyx_v_t); if (unlikely((__pyx_t_30 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 215, __pyx_L1_error)
       try {
@@ -5388,7 +5388,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *         for t in r:
  *             resvec.push_back(<double>t)
  *         solver.addEdge(ru, rv, w, resvec)             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Solve
 */
     __pyx_t_26 = __Pyx_PyLong_As_int(__pyx_v_ru); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 216, __pyx_L1_error)
@@ -5407,16 +5407,16 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
   /* "espprc/Bidirectional.pyx":219
- * 
+ *
  *     # Solve
  *     solver.run()             # <<<<<<<<<<<<<<
- * 
+ *
  *     # Extract results
 */
   __pyx_v_solver->run();
 
   /* "espprc/Bidirectional.pyx":222
- * 
+ *
  *     # Extract results
  *     cdef vector[int] p = solver.getPath()             # <<<<<<<<<<<<<<
  *     cdef vector[double] cons = solver.getConsumedResources()
@@ -5429,7 +5429,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     cdef vector[int] p = solver.getPath()
  *     cdef vector[double] cons = solver.getConsumedResources()             # <<<<<<<<<<<<<<
  *     cdef double tot = solver.getTotalCost()
- * 
+ *
 */
   __pyx_v_cons = __pyx_v_solver->getConsumedResources();
 
@@ -5437,17 +5437,17 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     cdef vector[int] p = solver.getPath()
  *     cdef vector[double] cons = solver.getConsumedResources()
  *     cdef double tot = solver.getTotalCost()             # <<<<<<<<<<<<<<
- * 
+ *
  *     path = [p[i] for i in range(p.size())]
 */
   __pyx_v_tot = __pyx_v_solver->getTotalCost();
 
   /* "espprc/Bidirectional.pyx":226
  *     cdef double tot = solver.getTotalCost()
- * 
+ *
  *     path = [p[i] for i in range(p.size())]             # <<<<<<<<<<<<<<
  *     resources = [cons[i] for i in range(cons.size())]
- * 
+ *
 */
   { /* enter inner scope */
     __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 226, __pyx_L1_error)
@@ -5466,10 +5466,10 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_t_9 = 0;
 
   /* "espprc/Bidirectional.pyx":227
- * 
+ *
  *     path = [p[i] for i in range(p.size())]
  *     resources = [cons[i] for i in range(cons.size())]             # <<<<<<<<<<<<<<
- * 
+ *
  *     cdef vector[vector[int]] allp
 */
   { /* enter inner scope */
@@ -5489,7 +5489,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
   __pyx_t_9 = 0;
 
   /* "espprc/Bidirectional.pyx":230
- * 
+ *
  *     cdef vector[vector[int]] allp
  *     all_paths = []             # <<<<<<<<<<<<<<
  *     cdef vector[int] row
@@ -5505,7 +5505,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     cdef vector[int] row
  *     if get_all_path:             # <<<<<<<<<<<<<<
  *         allp = solver.getAllFeasiblePaths()
- * 
+ *
 */
   __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_v_get_all_path); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 232, __pyx_L1_error)
   if (__pyx_t_13) {
@@ -5514,14 +5514,14 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     cdef vector[int] row
  *     if get_all_path:
  *         allp = solver.getAllFeasiblePaths()             # <<<<<<<<<<<<<<
- * 
+ *
  *         for i in range(allp.size()):
 */
     __pyx_v_allp = __pyx_v_solver->getAllFeasiblePaths();
 
     /* "espprc/Bidirectional.pyx":235
  *         allp = solver.getAllFeasiblePaths()
- * 
+ *
  *         for i in range(allp.size()):             # <<<<<<<<<<<<<<
  *             row = allp[i]
  *             all_paths.append([row[j] for j in range(row.size())])
@@ -5532,11 +5532,11 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
       __pyx_v_i = __pyx_t_11;
 
       /* "espprc/Bidirectional.pyx":236
- * 
+ *
  *         for i in range(allp.size()):
  *             row = allp[i]             # <<<<<<<<<<<<<<
  *             all_paths.append([row[j] for j in range(row.size())])
- * 
+ *
 */
       __pyx_v_row = (__pyx_v_allp[__pyx_v_i]);
 
@@ -5544,7 +5544,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *         for i in range(allp.size()):
  *             row = allp[i]
  *             all_paths.append([row[j] for j in range(row.size())])             # <<<<<<<<<<<<<<
- * 
+ *
  *     result = {
 */
       { /* enter inner scope */
@@ -5569,12 +5569,12 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *     cdef vector[int] row
  *     if get_all_path:             # <<<<<<<<<<<<<<
  *         allp = solver.getAllFeasiblePaths()
- * 
+ *
 */
   }
 
   /* "espprc/Bidirectional.pyx":240
- * 
+ *
  *     result = {
  *         "path": path,             # <<<<<<<<<<<<<<
  *         "resources": resources,
@@ -5619,7 +5619,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
  *         "all_feasible_paths": all_paths,
  *         "id_to_node": id_to_node,             # <<<<<<<<<<<<<<
  *     }
- * 
+ *
 */
   if (PyDict_SetItem(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_id_to_node, __pyx_v_id_to_node) < (0)) __PYX_ERR(0, 240, __pyx_L1_error)
   __pyx_v_result = ((PyObject*)__pyx_t_9);
@@ -5627,19 +5627,19 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":247
  *     }
- * 
+ *
  *     del solver             # <<<<<<<<<<<<<<
  *     return result
- * 
+ *
 */
   delete __pyx_v_solver;
 
   /* "espprc/Bidirectional.pyx":248
- * 
+ *
  *     del solver
  *     return result             # <<<<<<<<<<<<<<
- * 
- * 
+ *
+ *
 */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_result);
@@ -5648,7 +5648,7 @@ static PyObject *__pyx_pf_6espprc_13Bidirectional_solve_espprc(CYTHON_UNUSED PyO
 
   /* "espprc/Bidirectional.pyx":23
  *     return v
- * 
+ *
  * def solve_espprc(             # <<<<<<<<<<<<<<
  *     G,
  *     min_res,
@@ -6003,7 +6003,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_Bidirectional(PyObject *__pyx_pyin
         Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  
+
 __Pyx_RefNannySetupContext("PyInit_Bidirectional", 0);
   __Pyx_init_runtime_version();
   if (__Pyx_check_binary_version(__PYX_LIMITED_VERSION_HEX, __Pyx_get_runtime_version(), CYTHON_COMPILING_IN_LIMITED_API) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -6043,7 +6043,7 @@ __Pyx_RefNannySetupContext("PyInit_Bidirectional", 0);
  * from libcpp cimport bool
  * cimport cython
  * from math import isfinite             # <<<<<<<<<<<<<<
- * 
+ *
  * from .Bidirectional cimport BiDirectional
 */
   {
@@ -6065,7 +6065,7 @@ __Pyx_RefNannySetupContext("PyInit_Bidirectional", 0);
 
   /* "espprc/Bidirectional.pyx":23
  *     return v
- * 
+ *
  * def solve_espprc(             # <<<<<<<<<<<<<<
  *     G,
  *     min_res,
@@ -6107,7 +6107,7 @@ __Pyx_RefNannySetupContext("PyInit_Bidirectional", 0);
 
   /* "espprc/Bidirectional.pyx":23
  *     return v
- * 
+ *
  * def solve_espprc(             # <<<<<<<<<<<<<<
  *     G,
  *     min_res,
@@ -6123,8 +6123,8 @@ __Pyx_RefNannySetupContext("PyInit_Bidirectional", 0);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "espprc/Bidirectional.pyx":251
- * 
- * 
+ *
+ *
  * solve_espprc_enhanced = solve_espprc             # <<<<<<<<<<<<<<
 */
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_solve_espprc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 251, __pyx_L1_error)
@@ -6135,7 +6135,7 @@ __Pyx_RefNannySetupContext("PyInit_Bidirectional", 0);
   /* "espprc/Bidirectional.pyx":1
  * # distutils: language = c++             # <<<<<<<<<<<<<<
  * # cython: boundscheck=False, wraparound=False, initializedcheck=False, cdivision=True
- * 
+ *
 */
   __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -6352,12 +6352,12 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitGlobals(void) {
   /* PythonCompatibility.init */
   if (likely(__Pyx_init_co_variables() == 0)); else
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   /* CommonTypesMetaclass.init */
   if (likely(__pyx_CommonTypesMetaclass_init(__pyx_m) == 0)); else
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   /* CachedMethodType.init */
@@ -6371,12 +6371,12 @@ static int __Pyx_InitGlobals(void) {
       }
   } // error handling follows
   #endif
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   /* CythonFunctionShared.init */
   if (likely(__pyx_CyFunction_init(__pyx_m) == 0)); else
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   return 0;

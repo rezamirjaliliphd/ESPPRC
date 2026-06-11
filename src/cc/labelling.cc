@@ -31,23 +31,11 @@ Label::Label(
     : weight(weight_in),
       vertex(vertex_in),
       resource_consumption(resource_consumption_in),
-      partial_path(partial_path_in),
-      params_ptr(params_ptr_in) {
+  partial_path(partial_path_in),
+  params_ptr(params_ptr_in) {
   if (params_ptr->elementary) {
-<<<<<<< HEAD
-    if (bitwiseElementaryEnabled(params_ptr)) {
-      for (const int& node_id : partial_path) {
-        if (node_id >= 0 && node_id < 64) {
-          unreachable_mask |= nodeMask(node_id);
-        }
-      }
-    } else {
-      // Insert elements of partial_path
-      unreachable_nodes.insert(partial_path.cbegin(), partial_path.cend());
-=======
     for (const int node_id : partial_path) {
       markNodeUnreachable(node_id);
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
     }
   }
 };
@@ -128,11 +116,7 @@ Label Label::extend(
     if (params_ptr->elementary) {
       // Push new node (direction doesn't matter here as edges have been
       // reversed for backward extensions)
-<<<<<<< HEAD
-      addUnreachableNode(new_node.user_id);
-=======
       markNodeUnreachable(new_node.user_id);
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
     }
   }
   return Label();
@@ -197,38 +181,17 @@ bool Label::checkPathExtension(const int& user_id) const {
 }
 
 bool Label::isNodeUnreachable(const int& user_id) const {
-<<<<<<< HEAD
   if (bitwiseElementaryEnabled(params_ptr) && user_id >= 0 && user_id < 64) {
     return (unreachable_mask & nodeMask(user_id)) != 0;
   }
   return unreachable_nodes.find(user_id) != unreachable_nodes.end();
 }
 
-void Label::addUnreachableNode(const int& user_id) {
+void Label::markNodeUnreachable(const int& user_id) {
   if (bitwiseElementaryEnabled(params_ptr) && user_id >= 0 && user_id < 64) {
     unreachable_mask |= nodeMask(user_id);
     return;
   }
-=======
-  if (params_ptr->use_bitwise_elementary) {
-    if (user_id < 0 || user_id >= 64) {
-      return false;
-    }
-    return (unreachable_mask & (uint64_t{1} << user_id)) != 0;
-  }
-
-  return unreachable_nodes.find(user_id) != unreachable_nodes.end();
-}
-
-void Label::markNodeUnreachable(const int& user_id) {
-  if (params_ptr->use_bitwise_elementary) {
-    if (user_id >= 0 && user_id < 64) {
-      unreachable_mask |= (uint64_t{1} << user_id);
-    }
-    return;
-  }
-
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
   unreachable_nodes.insert(user_id);
 }
 
@@ -238,11 +201,7 @@ bool Label::checkSameFeasibleExtensionTwoCycleSimple(const Label& other) const {
 }
 
 bool Label::checkSameFeasibleExtensionElementary(const Label& other) const {
-<<<<<<< HEAD
   if (bitwiseElementaryEnabled(params_ptr)) {
-=======
-  if (params_ptr->use_bitwise_elementary) {
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
     return (unreachable_mask & ~other.unreachable_mask) == 0;
   }
 
@@ -412,58 +371,10 @@ bool runDominanceEff(
     const Label&                     label,
     const bidirectional::Directions& direction,
     const bool&                      elementary) {
-<<<<<<< HEAD
   bool dominated = false;
   for (auto it = efficient_labels_ptr->begin();
        it != efficient_labels_ptr->end();) {
     if (label.params_ptr->timeLimitExceeded()) {
-=======
-  
-  const int num_labels = efficient_labels_ptr->size();
-  
-  // Only parallelize if enabled and enough labels to justify overhead
-#ifdef _OPENMP
-  const int num_threads = label.params_ptr->num_threads;
-  const bool use_parallel = label.params_ptr->enable_parallel && num_labels > 50;
-#else
-  const bool use_parallel = false;
-#endif
-  
-  if (use_parallel) {
-#ifdef _OPENMP
-    // Parallel version - check dominance in parallel, then delete sequentially
-    bool dominated = false;
-    std::vector<bool> to_delete(num_labels, false);
-    
-    #pragma omp parallel num_threads(num_threads)
-    {
-      bool local_dominated = false;
-      
-      #pragma omp for schedule(static) nowait
-      for (int i = 0; i < num_labels; ++i) {
-        const Label& label2 = (*efficient_labels_ptr)[i];
-        
-        if (label != label2) {
-          if (label.checkDominance(label2, direction)) {
-            to_delete[i] = true;
-          } else if (label2.checkDominance(label, direction)) {
-            local_dominated = true;
-          }
-        }
-      }
-      
-      // Combine dominated flags
-      #pragma omp critical
-      {
-        if (local_dominated) {
-          dominated = true;
-        }
-      }
-    } // end parallel
-    
-    // If label is dominated, no need to delete others
-    if (dominated) {
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
       return true;
     }
     bool         deleted = false;

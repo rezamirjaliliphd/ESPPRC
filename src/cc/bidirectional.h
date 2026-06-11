@@ -108,7 +108,7 @@ class BiDirectional {
   }
   /// @see bidirectional::Params
   void setElementary(const bool& elementary_in) {
-    params_ptr_->setElementary(true);
+    params_ptr_->setElementary(elementary_in);
   }
   /// @see bidirectional::Params
   void setTwoCycleElimination(const bool& two_cycle_elimination_in) {
@@ -131,32 +131,38 @@ class BiDirectional {
   void setREFCallback(bidirectional::REFCallback* cb) {
     params_ptr_->setREFCallback(cb);
   }
-  
+
   /// Set k-cycle elimination
   /// @see bidirectional::Params
   void setKCycleElimination(const int& k) {
     params_ptr_->setKCycleElimination(k);
   }
-  
+
   /// Enable time window constraints
   /// @see bidirectional::Params
   void setTimeWindows(const bool& enable, const int& res_idx = 0) {
     params_ptr_->setTimeWindows(enable, res_idx);
   }
-  
+
   /// Enable bitwise elementary checking
   /// @see bidirectional::Params
   void setBitwiseElementary(const bool& enable, const int& max_nodes_in = 0) {
     params_ptr_->setBitwiseElementary(enable, max_nodes_in);
   }
-  
+
+  /// Enable OpenMP-assisted label extension when available.
+  /// @see bidirectional::Params
+  void setParallel(const bool& enable, const int& threads = 1) {
+    params_ptr_->setParallel(enable, threads);
+  }
+
   /// set random using a given seed
   // void setSeed(const int& seed) { std::srand(seed); }
   // Return every feasible merged label (source→sink) found during join
   const std::vector<labelling::Label>& getAllFeasibleSolutions() const { return merged_labels_; }
   const std::vector<std::vector<int>>& getAllFeasiblePaths() const {return paths;}
   double getBestBaseCost()  const { return best_base_cost_; }
-  double getBestExtraCost() const { return best_extra_cost_; } 
+  double getBestExtraCost() const { return best_extra_cost_; }
 
 
  private:
@@ -165,9 +171,9 @@ class BiDirectional {
   /// Pointer to graph
   std::unique_ptr<DiGraph> graph_ptr_;
   double best_base_cost_  = std::numeric_limits<double>::infinity(); // join base
-  double best_extra_cost_ = 0.0;  
+  double best_extra_cost_ = 0.0;
                                   // pi⋅floor term
-  
+
 
   /// Start time to ensure time limit is met
   std::chrono::time_point<std::chrono::system_clock> start_time_;

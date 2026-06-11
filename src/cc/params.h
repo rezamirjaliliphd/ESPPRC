@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <string>
 #include <vector>
 
 #include "ref_callback.h"
@@ -29,23 +30,25 @@ class Params {
   double threshold = std::nan("na");
   bool elementary = true;
   bool two_cycle_elimination = false;
-  
+
   // K-cycle elimination (k=2: two-cycle, k=3: three-cycle, etc.)
   int k_cycle_elimination = 0;  // 0 = disabled, 2 = 2-cycle, 3 = 3-cycle
-  
+
   bool bounds_pruning = false;
   bool find_critical_res = false;
   int critical_res = 0;
   bidirectional::REFCallback* ref_callback = nullptr;
-  
+
   // Time window support
   bool use_time_windows = false;
   int time_window_res_idx = -1;  // Resource index for time windows (default: -1 disabled)
-  
+
   // Optimization flags
   bool use_bitwise_elementary = false;  // Use bitwise operations for elementary checking
   int max_nodes = 0;  // Maximum number of nodes (for bitwise mask sizing)
-  
+  bool enable_parallel = false;
+  int num_threads = 1;
+
   /* Constructors */
   Params(){};
   ~Params() {
@@ -60,7 +63,7 @@ class Params {
     else if (direction_in == "backward")
       direction = BWD;
   }
-  
+
   void setMethod(const std::string& method_in) { method = method_in; }
   void setTimeLimit(const double& time_limit_in) { time_limit = time_limit_in; }
   void setStartTime(
@@ -78,14 +81,14 @@ class Params {
   }
   void setThreshold(const double& threshold_in) { threshold = threshold_in; }
   void setElementary(const bool& elementary_in) { elementary = elementary_in; }
-  
+
   void setTwoCycleElimination(const bool& two_cycle_elimination_in) {
     two_cycle_elimination = two_cycle_elimination_in;
     if (two_cycle_elimination_in && k_cycle_elimination == 0) {
       k_cycle_elimination = 2;
     }
   };
-  
+
   /**
    * Set k-cycle elimination
    * @param k: cycle length to eliminate (2, 3, etc.). 0 to disable.
@@ -97,21 +100,21 @@ class Params {
       two_cycle_elimination = true;
     }
   }
-  
+
   void setBoundsPruning(const bool& bounds_pruning_in) {
     bounds_pruning = bounds_pruning_in;
   }
-  
+
   void setFindCriticalRes(const bool& find_critical_res_in) {
     find_critical_res = find_critical_res_in;
   }
-  
+
   void setCriticalRes(const int& critical_res_in) {
     critical_res = critical_res_in;
   }
-  
+
   void setREFCallback(bidirectional::REFCallback* cb) { ref_callback = cb; };
-  
+
   /**
    * Enable time window constraints
    * @param enable: true to enable time windows
@@ -121,7 +124,7 @@ class Params {
     use_time_windows = enable;
     time_window_res_idx = res_idx;
   }
-  
+
   /**
    * Enable bitwise elementary checking (faster for graphs with <= 64 or 128 nodes)
    * @param enable: true to use bitwise operations
@@ -131,7 +134,12 @@ class Params {
     use_bitwise_elementary = enable;
     max_nodes = max_nodes_in;
   }
-  
+
+  void setParallel(const bool& enable, const int& threads = 1) {
+    enable_parallel = enable;
+    num_threads = threads > 1 ? threads : 1;
+  }
+
 };
 
 } // namespace bidirectional

@@ -30,11 +30,7 @@ class Label {
   std::vector<int>      partial_path         = {};
   /// Set of unreachable nodes. This is only used in the elementary case.
   std::set<int>          unreachable_nodes = {};
-<<<<<<< HEAD
   std::uint64_t          unreachable_mask  = 0;
-=======
-  uint64_t               unreachable_mask  = 0;
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
   bidirectional::Params* params_ptr        = nullptr;
   // Phi value for joining algorithm from Righini and Salani (2006)
   double phi = std::nan("nan");
@@ -150,14 +146,11 @@ class Label {
 
   /// Returns true is the partial path extension is OK.
   bool checkPathExtension(const int& user_id) const;
-  bool isNodeUnreachable(const int& user_id) const;
-  void markNodeUnreachable(const int& user_id);
-
   /// Returns true if node is already unreachable under the active elementary representation.
   bool isNodeUnreachable(const int& user_id) const;
 
   /// Marks node as unreachable under the active elementary representation.
-  void addUnreachableNode(const int& user_id);
+  void markNodeUnreachable(const int& user_id);
 
   /**
    * Simple check if both lables have the same feasible extension with regard to
