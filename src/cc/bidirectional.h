@@ -279,9 +279,10 @@ class BiDirectional {
    * here, as an extra condition to add a label to the bucket.
    * Also, `visited_vertices` is updated here.
    */
-  void updateEfficientLabels(
+  bool updateEfficientLabels(
       const Directions&       direction,
-      const labelling::Label& candidate_label);
+      const labelling::Label& candidate_label,
+      const bool&             maintain_heap = true);
 
   /// Update `best_labels` entry by node with the candidate_label if
   /// appropriate

@@ -3,7 +3,9 @@ import os, sys
 
 def _add_vcpkg_bin():
     # Try common spots; adjust if your path differs
+    conda_prefix = os.environ.get("CONDA_PREFIX") or os.environ.get("PREFIX")
     candidates = [
+        conda_prefix and os.path.join(conda_prefix, "Library", "bin"),
         os.environ.get("VCPKG_ROOT") and os.path.join(os.environ["VCPKG_ROOT"], "installed", "x64-windows", "bin"),
         r"C:\vcpkg\installed\x64-windows\bin",
     ]
@@ -24,15 +26,18 @@ __all__ = []
 
 # Import the compiled extension explicitly
 try:
-    from . import bidirectional_enhanced
+    from . import Bidirectional
 
     # re-export module
-    __all__.append("bidirectional_enhanced")
+    __all__.append("Bidirectional")
 
-    # re-export main entry point at top level (optional but recommended)
-    if hasattr(bidirectional_enhanced, "solve_espprc_enhanced"):
-        solve_espprc_enhanced = bidirectional_enhanced.solve_espprc_enhanced
+    if hasattr(Bidirectional, "solve_espprc"):
+        solve_espprc = Bidirectional.solve_espprc
+        solve_espprc_enhanced = solve_espprc
+        ESPPRC = solve_espprc
+        __all__.append("solve_espprc")
         __all__.append("solve_espprc_enhanced")
+        __all__.append("ESPPRC")
 
 except Exception as e:
     # Keep package importable even if extension fails

@@ -93,11 +93,11 @@ void setBitwiseElementary(const bool& enable, const int& max_nodes_in = 0);
 
 ### 4. Cython Wrapper Updates
 
-**File: `python/espprc/bidirectional_enhanced.pxd`**
+**File: `python/espprc/Bidirectional.pxd`**
 - Added declarations for new C++ setter methods
 
-**File: `python/espprc/bidirectional_enhanced.pyx`**
-- Updated `solve_espprc_enhanced()` function signature with new parameters:
+**File: `python/espprc/Bidirectional.pyx`**
+- Updated `solve_espprc()` function signature with new parameters:
   - `k_cycle_elimination=0`: K-cycle elimination level
   - `use_time_windows=False`: Enable time window constraints
   - `time_window_res_idx=0`: Resource index for time
@@ -142,9 +142,9 @@ Already implemented in the original code:
 
 ### Basic Usage
 ```python
-from espprc import solve_espprc_enhanced
+from espprc import solve_espprc
 
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1
 )
@@ -152,7 +152,7 @@ result = solve_espprc_enhanced(
 
 ### With Time Windows
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     use_time_windows=True,
@@ -162,7 +162,7 @@ result = solve_espprc_enhanced(
 
 ### With K-Cycle Elimination
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=False,
@@ -172,7 +172,7 @@ result = solve_espprc_enhanced(
 
 ### With Bitwise Optimization
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
@@ -182,7 +182,7 @@ result = solve_espprc_enhanced(
 
 ### Combined Features
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
@@ -206,7 +206,7 @@ A comprehensive test suite is provided in `test_enhanced_features.py`:
 
 ```bash
 # Install dependencies
-pip install -e .
+pip install .
 
 # Run tests
 python test_enhanced_features.py
@@ -237,8 +237,8 @@ The key improvement is in `labelling_opt.cc`, `extend()` method:
 2. `src/cc/labelling_opt.h` - Added `checkTimeWindowFeasibility()` declaration
 3. `src/cc/labelling_opt.cc` - Implemented time window checking in `extend()`
 4. `src/cc/bidirectional.h` - Added setter methods for new features
-5. `python/espprc/bidirectional_enhanced.pxd` - Updated C++ declarations
-6. `python/espprc/bidirectional_enhanced.pyx` - Updated Python wrapper
+5. `python/espprc/Bidirectional.pxd` - Updated C++ declarations
+6. `python/espprc/Bidirectional.pyx` - Updated Python wrapper
 7. `test_enhanced_features.py` - New comprehensive test suite
 
 ## Verification Checklist

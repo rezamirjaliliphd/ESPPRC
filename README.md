@@ -44,56 +44,94 @@ All these C++ features are now accessible via Python:
 ### Prerequisites
 - C++17 compiler (MSVC, GCC, Clang)
 - Python >=3.9
-- LEMON graph library
-- fmt library (for logging)
+- CMake-compatible build tools, provided automatically by pip/scikit-build-core in most cases
+- Optional preinstalled C++ libraries: LEMON, spdlog, fmt
 
-### Quick Install
+### Recommended Conda Install
 ```bash
-pip install -e .
+conda env create -f environment.yml
+conda activate espprc
+python -m pip install .
 ```
 
-### From Source
+If you already have an active conda environment:
+
+```bash
+conda install -c conda-forge cxx-compiler cmake ninja scikit-build-core networkx lemon spdlog fmt
+python -m pip install .
+```
+
+The default pip build uses CMake through `scikit-build-core`. CMake first searches the active conda environment via `CONDA_PREFIX`; if `lemon`, `spdlog`, or `fmt` are missing, it downloads them with `FetchContent`.
+
+During configuration, CMake prints the detected platform and compiler, for example `Linux with GNU/g++`, `Windows with Microsoft Visual C++`, or `Windows with GNU/g++`.
+
+To force CMake to use only already-installed native dependencies:
+
+```bash
+python -m pip install . --config-settings=cmake.define.ESPPRC_VENDOR_DEPS=OFF
+```
+
+### System Install
 ```bash
 # Clone repository
 git clone <repo-url>
 cd ESPPRC
 
 # Install dependencies (example for Ubuntu)
-sudo apt-get install liblemon-dev libfmt-dev
+sudo apt-get install liblemon-dev libspdlog-dev libfmt-dev
 
 # Install Python package
-pip install -e .
+pip install .
 ```
 
 ### Platform-Specific Setup
 
-**Windows (vcpkg)**:
+**Windows with Visual C++ (recommended for standard CPython wheels)**:
 ```bash
-vcpkg install lemon:x64-windows fmt:x64-windows
+:: Run from "Developer PowerShell for VS" or a shell where cl.exe is available.
+vcpkg install lemon:x64-windows spdlog:x64-windows fmt:x64-windows
 set VCPKG_ROOT=C:\vcpkg
-pip install -e .
+python -m pip install .
+```
+
+**Windows with MinGW/g++**:
+```bash
+:: Use this only from a MinGW/conda environment where g++ is the active compiler.
+conda install -c conda-forge cxx-compiler cmake ninja scikit-build-core networkx lemon spdlog fmt
+python -m pip install . --config-settings=cmake.args="-G;Ninja"
 ```
 
 **macOS (Homebrew)**:
 ```bash
-brew install lemon fmt
-pip install -e .
+brew install lemon spdlog fmt
+pip install .
 ```
 
 **Linux**:
 ```bash
-sudo apt-get install liblemon-dev libfmt-dev  # Debian/Ubuntu
+sudo apt-get install g++ cmake ninja-build  # Debian/Ubuntu compiler tools
+sudo apt-get install liblemon-dev libspdlog-dev libfmt-dev  # Debian/Ubuntu
 # OR
-sudo dnf install lemon-devel fmt-devel  # Fedora/RHEL
-pip install -e .
+sudo dnf install gcc-c++ cmake ninja-build lemon-devel spdlog-devel fmt-devel  # Fedora/RHEL
+python -m pip install .
 ```
+
+If the libraries are installed in a custom location, set these before building:
+
+```bash
+export ESPPRC_INCLUDE_DIRS=/path/to/include
+export ESPPRC_LIBRARY_DIRS=/path/to/lib
+python -m pip install .
+```
+
+NumPy is not required at runtime. It is only used by the included test script, so install it with `python -m pip install ".[test]"` if you want to run those tests.
 
 ## Usage
 
 ### Basic Example
 ```python
 import networkx as nx
-from espprc import solve_espprc_enhanced
+from espprc import solve_espprc
 
 # Create graph
 G = nx.DiGraph()
@@ -101,7 +139,7 @@ G.add_edge(0, 1, weight=2.0, res_cost=[1.0, 2.0])
 G.add_edge(1, 2, weight=3.0, res_cost=[2.0, 1.0])
 
 # Solve with default settings
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G,
     min_res=[0.0, 0.0],
     max_res=[10.0, 10.0],
@@ -119,7 +157,7 @@ print(f"Resources: {result['resources']}")
 
 #### K-Cycle Elimination (Recommended: k=3)
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=False,
@@ -129,7 +167,7 @@ result = solve_espprc_enhanced(
 
 #### Bitwise Elementary Checking (For Small Graphs)
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
@@ -139,7 +177,7 @@ result = solve_espprc_enhanced(
 
 #### Time Windows
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     use_time_windows=True,
@@ -149,7 +187,7 @@ result = solve_espprc_enhanced(
 
 #### Bounds Pruning
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     bounds_pruning=True  # Use shortest path bounds
@@ -158,7 +196,7 @@ result = solve_espprc_enhanced(
 
 #### Time Limit and Threshold
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     time_limit=60.0,  # Stop after 60 seconds
@@ -195,8 +233,8 @@ src/cc/
 └── ...
 
 python/espprc/
-├── bidirectional_enhanced.pyx  # Cython wrapper with all features
-└── bidirectional_enhanced.pxd  # C++ declarations
+├── Bidirectional.pyx  # Cython wrapper with all features
+└── Bidirectional.pxd  # C++ declarations
 ```
 
 ## Implementation Details

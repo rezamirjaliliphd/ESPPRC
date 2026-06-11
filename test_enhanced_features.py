@@ -35,9 +35,9 @@ def test_basic_functionality():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
-        result = solve_espprc_enhanced(
+        result = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=2
         )
@@ -52,7 +52,7 @@ def test_basic_functionality():
         print("✓ Basic test PASSED")
         
     except ImportError:
-        print("✗ Module not built - run 'pip install -e .' first")
+        print("✗ Module not built - run 'pip install .' first")
     except Exception as e:
         print(f"✗ Basic test FAILED: {e}")
 
@@ -74,17 +74,17 @@ def test_elementary_constraint():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Test with elementary=True
-        result_elem = solve_espprc_enhanced(
+        result_elem = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=3,
             elementary=True
         )
         
         # Test with elementary=False
-        result_non_elem = solve_espprc_enhanced(
+        result_non_elem = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=3,
             elementary=False
@@ -116,12 +116,12 @@ def test_k_cycle_elimination():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Test different k values
         for k in [0, 2, 3]:
             start = time.time()
-            result = solve_espprc_enhanced(
+            result = solve_espprc(
                 G, min_res, max_res, cg_cut_pi,
                 source=0, sink=14,
                 elementary=False,
@@ -156,17 +156,17 @@ def test_time_windows():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Without time windows
-        result_no_tw = solve_espprc_enhanced(
+        result_no_tw = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=3,
             use_time_windows=False
         )
         
         # With time windows (time_window_res_idx=0)
-        result_tw = solve_espprc_enhanced(
+        result_tw = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=3,
             use_time_windows=True,
@@ -195,11 +195,11 @@ def test_bitwise_optimization():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Without bitwise
         start = time.time()
-        result_no_bitwise = solve_espprc_enhanced(
+        result_no_bitwise = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=29,
             elementary=True,
@@ -209,7 +209,7 @@ def test_bitwise_optimization():
         
         # With bitwise
         start = time.time()
-        result_bitwise = solve_espprc_enhanced(
+        result_bitwise = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=29,
             elementary=True,
@@ -247,11 +247,11 @@ def test_bounds_pruning():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Without bounds pruning
         start = time.time()
-        result_no_bounds = solve_espprc_enhanced(
+        result_no_bounds = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=24,
             bounds_pruning=False
@@ -260,7 +260,7 @@ def test_bounds_pruning():
         
         # With bounds pruning
         start = time.time()
-        result_bounds = solve_espprc_enhanced(
+        result_bounds = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=24,
             bounds_pruning=True
@@ -288,11 +288,11 @@ def test_direction_control():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Test different directions
         for direction in ["forward", "backward", "both"]:
-            result = solve_espprc_enhanced(
+            result = solve_espprc(
                 G, min_res, max_res, cg_cut_pi,
                 source=0, sink=19,
                 direction=direction
@@ -318,11 +318,11 @@ def test_time_limit_threshold():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Test time limit
         start = time.time()
-        result_time_limit = solve_espprc_enhanced(
+        result_time_limit = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=29,
             time_limit=1.0  # 1 second limit
@@ -333,7 +333,7 @@ def test_time_limit_threshold():
         assert elapsed < 2.0, "Should respect time limit"
         
         # Test threshold
-        result_threshold = solve_espprc_enhanced(
+        result_threshold = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=29,
             threshold=100.0  # Stop if cost <= 100
@@ -366,9 +366,9 @@ def test_get_all_paths():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
-        result = solve_espprc_enhanced(
+        result = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=3,
             get_all_path=True
@@ -400,11 +400,11 @@ def test_sequential_repeatability():
     cg_cut_pi = [0.0, 0.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Sequential
         start = time.time()
-        result_seq = solve_espprc_enhanced(
+        result_seq = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=21
         )
@@ -412,7 +412,11 @@ def test_sequential_repeatability():
         
         # Repeat the same solve and verify deterministic cost.
         start = time.time()
+<<<<<<< HEAD
         result_repeat = solve_espprc_enhanced(
+=======
+        result_par = solve_espprc(
+>>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=21
         )
@@ -451,18 +455,18 @@ def test_chvatal_gomory_cuts():
     max_res = [20.0, 20.0]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Without CG cuts
         cg_cut_pi_zero = [0.0, 0.0]
-        result_no_cg = solve_espprc_enhanced(
+        result_no_cg = solve_espprc(
             G, min_res, max_res, cg_cut_pi_zero,
             source=0, sink=3
         )
         
         # With CG cuts (apply penalty to fractional resources)
         cg_cut_pi_active = [0.5, 0.3]  # Penalties for floor(resource)
-        result_with_cg = solve_espprc_enhanced(
+        result_with_cg = solve_espprc(
             G, min_res, max_res, cg_cut_pi_active,
             source=0, sink=3
         )
@@ -493,9 +497,9 @@ def test_combined_features():
     cg_cut_pi = [0.1, 0.05]
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
-        result = solve_espprc_enhanced(
+        result = solve_espprc(
             G, min_res, max_res, cg_cut_pi,
             source=0, sink=24,
             elementary=True,
@@ -525,7 +529,7 @@ def test_edge_cases():
     print("="*70)
     
     try:
-        from espprc import solve_espprc_enhanced
+        from espprc import solve_espprc
         
         # Empty graph
         G_empty = nx.DiGraph()
@@ -533,7 +537,7 @@ def test_edge_cases():
         G_empty.add_node(1)
         
         try:
-            result = solve_espprc_enhanced(
+            result = solve_espprc(
                 G_empty, [0.0], [10.0], [0.0],
                 source=0, sink=1
             )
@@ -545,7 +549,7 @@ def test_edge_cases():
         G_single = nx.DiGraph()
         G_single.add_edge(0, 1, weight=5.0, res_cost=[2.0])
         
-        result = solve_espprc_enhanced(
+        result = solve_espprc(
             G_single, [0.0], [10.0], [0.0],
             source=0, sink=1
         )
@@ -556,7 +560,7 @@ def test_edge_cases():
         G.add_edge(0, 1, weight=1.0, res_cost=[5.0])
         G.add_edge(1, 2, weight=1.0, res_cost=[5.0])
         
-        result = solve_espprc_enhanced(
+        result = solve_espprc(
             G, [0.0], [8.0], [0.0],  # Tight: can't reach sink
             source=0, sink=2
         )

@@ -1,5 +1,6 @@
 import sys
 import platform
+import os
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
@@ -10,7 +11,7 @@ is_linux = sys.platform.startswith('linux')
 
 # Source files
 sources = [
-    "python/espprc/bidirectional_enhanced.pyx",
+    "python/espprc/Bidirectional.pyx",
     "src/cc/bidirectional.cc",
     "src/cc/digraph.cc",
     "src/cc/labelling.cc",
@@ -25,10 +26,60 @@ include_dirs = [".", "src/cc"]
 # Libraries
 libraries = ["lemon", "fmt"]
 library_dirs = []
+runtime_library_dirs = []
 
 # Compiler and linker flags
 extra_compile_args = []
 extra_link_args = []
+
+
+def _append_existing(paths, target):
+    for path in paths:
+        if path and os.path.isdir(path) and path not in target:
+            target.append(path)
+
+
+def _append_env_paths(env_var, target):
+    raw_value = os.environ.get(env_var, "")
+    _append_existing(raw_value.split(os.pathsep), target)
+
+
+# Prefer dependencies installed into the active conda environment.
+conda_prefix = os.environ.get("CONDA_PREFIX") or os.environ.get("PREFIX")
+if conda_prefix:
+    if is_windows:
+        _append_existing(
+            [
+                os.path.join(conda_prefix, "Library", "include"),
+                os.path.join(conda_prefix, "include"),
+            ],
+            include_dirs,
+        )
+        _append_existing(
+            [
+                os.path.join(conda_prefix, "Library", "lib"),
+                os.path.join(conda_prefix, "libs"),
+                os.path.join(conda_prefix, "lib"),
+            ],
+            library_dirs,
+        )
+    else:
+        _append_existing(
+            [
+                os.path.join(conda_prefix, "include"),
+            ],
+            include_dirs,
+        )
+        conda_lib_dirs = [
+            os.path.join(conda_prefix, "lib"),
+            os.path.join(conda_prefix, "lib64"),
+        ]
+        _append_existing(conda_lib_dirs, library_dirs)
+        _append_existing(conda_lib_dirs, runtime_library_dirs)
+
+_append_env_paths("ESPPRC_INCLUDE_DIRS", include_dirs)
+_append_env_paths("ESPPRC_LIBRARY_DIRS", library_dirs)
+_append_env_paths("ESPPRC_RUNTIME_LIBRARY_DIRS", runtime_library_dirs)
 
 if is_windows:
     # MSVC on Windows
@@ -86,11 +137,12 @@ else:  # Linux
 # Create extension
 ext_modules = [
     Extension(
-        "espprc.bidirectional_enhanced",
+        "espprc.Bidirectional",
         sources=sources,
         include_dirs=include_dirs,
         libraries=libraries,
         library_dirs=library_dirs,
+        runtime_library_dirs=runtime_library_dirs if not is_windows else [],
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,
         language="c++"

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python bytecode/cache
 __pycache__/
 *.py[cod]
@@ -23,14 +24,55 @@ python/espprc/bidirectional_enhanced.cpp
 .pytest_cache/
 .coverage
 htmlcov/
+=======
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Python packaging/build outputs
+build/
+dist/
+wheelhouse/
+*.egg-info/
+pip-wheel-metadata/
+
+# Compiled extension artifacts
+*.so
+*.pyd
+*.dll
+*.dylib
+
+# CMake build outputs
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+_skbuild/
+*.cmake.user
+compile_commands.json
+>>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
 
 # Local environments
 .venv/
 venv/
 env/
+<<<<<<< HEAD
 
 # IDE/OS noise
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+=======
+.env
+.env.*
+
+# Editor/OS noise
+.DS_Store
+Thumbs.db
+*~
+
+>>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)

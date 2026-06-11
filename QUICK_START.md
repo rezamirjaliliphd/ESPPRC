@@ -3,14 +3,14 @@
 ## Installation
 
 ```bash
-pip install -e .
+pip install .
 ```
 
 ## Basic Usage
 
 ```python
 import networkx as nx
-from espprc import solve_espprc_enhanced
+from espprc import solve_espprc
 
 # Create your graph
 G = nx.DiGraph()
@@ -23,7 +23,7 @@ max_res = [10.0, 10.0]
 cg_cut_pi = [0.0, 0.0]
 
 # Solve
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0,
     sink=2
@@ -38,7 +38,7 @@ print(f"Resources: {result['resources']}")
 
 ### Elementary Paths (Default)
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True  # Default
@@ -48,7 +48,7 @@ result = solve_espprc_enhanced(
 ### K-Cycle Elimination
 **Recommended: k=3 for best performance/quality tradeoff**
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=False,
@@ -59,7 +59,7 @@ result = solve_espprc_enhanced(
 ### Time Windows
 Assumes first resource is time, and vertices have `tw_early` and `tw_late` attributes:
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     use_time_windows=True,
@@ -70,7 +70,7 @@ result = solve_espprc_enhanced(
 ### Bitwise Elementary (Fast for Small Graphs)
 **Available for graphs with ≤64 nodes when `use_bitwise=True`**
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
@@ -80,7 +80,7 @@ result = solve_espprc_enhanced(
 
 ### Bounds Pruning
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     bounds_pruning=True  # Use shortest path bounds
@@ -89,7 +89,7 @@ result = solve_espprc_enhanced(
 
 ### Time Limits and Thresholds
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     time_limit=60.0,    # Stop after 60 seconds
@@ -99,7 +99,7 @@ result = solve_espprc_enhanced(
 
 ### Search Direction
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     direction="both"  # Options: "forward", "backward", "both"
@@ -108,7 +108,7 @@ result = solve_espprc_enhanced(
 
 ### Get All Feasible Paths
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     get_all_path=True
@@ -146,7 +146,7 @@ for path in result['all_feasible_paths']:
 
 ### For Small Graphs (≤64 nodes)
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,
@@ -156,7 +156,7 @@ result = solve_espprc_enhanced(
 
 ### For Non-Elementary Paths
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=False,
@@ -166,7 +166,7 @@ result = solve_espprc_enhanced(
 
 ### For Dense Graphs
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     bounds_pruning=True,  # More aggressive pruning
@@ -176,7 +176,7 @@ result = solve_espprc_enhanced(
 
 ### Maximum Performance Combo
 ```python
-result = solve_espprc_enhanced(
+result = solve_espprc(
     G, min_res, max_res, cg_cut_pi,
     source=0, sink=n-1,
     elementary=True,

@@ -1,0 +1,14 @@
+name: espprc
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.9
+  - pip
+  - cxx-compiler
+  - cmake>=3.22
+  - ninja
+  - scikit-build-core>=0.10
+  - networkx>=2.5
+  - lemon
+  - spdlog
+  - fmt

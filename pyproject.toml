@@ -1,6 +1,11 @@
 [build-system]
+<<<<<<< HEAD
 requires = ["setuptools>=75", "wheel", "Cython>=3.0"]
 build-backend = "setuptools.build_meta"
+=======
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
+>>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
 
 [project]
 name = "espprc"
@@ -8,8 +13,9 @@ version = "0.2.0"
 description = "Optimized ESPPRC solver"
 requires-python = ">=3.9"
 authors = [{name = "Reza Mirjalili"}]
-dependencies = ["numpy>=1.20", "networkx>=2.5"]
+dependencies = ["networkx>=2.5"]
 
+<<<<<<< HEAD
 [tool.setuptools]
 packages = ["espprc"]
 
@@ -44,3 +50,11 @@ library-dirs = [
 libraries = ["lemon", "fmt"]
 
 extra-compile-args = ["/std:c++17", "/O2", "/EHsc", "/utf-8", "/bigobj"]
+=======
+[project.optional-dependencies]
+test = ["numpy"]
+
+[tool.scikit-build]
+cmake.version = ">=3.22"
+wheel.packages = []
+>>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)

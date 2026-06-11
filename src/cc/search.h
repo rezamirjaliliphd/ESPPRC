@@ -72,6 +72,10 @@ class Search {
     pushHeap();
   }
 
+  void appendUnprocessedLabel(const labelling::Label& label) {
+    unprocessed_labels->push_back(label);
+  }
+
   void pushEfficientLabel(const int& lemon_id, const labelling::Label& label) {
     efficient_labels[lemon_id].push_back(label);
   }
