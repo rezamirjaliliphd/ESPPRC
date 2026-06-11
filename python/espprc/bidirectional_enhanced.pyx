@@ -175,7 +175,11 @@ def solve_espprc_enhanced(
     if use_time_windows:
         solver.setTimeWindows(True, time_window_res_idx)
     
+<<<<<<< HEAD
     # Bitwise elementary
+=======
+    # Bitwise elementary is only valid for the uint64 mask range.
+>>>>>>> a70663c (hey)
     if use_bitwise:
         if nV > 64:
             del solver

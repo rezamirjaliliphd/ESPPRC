@@ -1,5 +1,6 @@
 #pragma once
 
+<<<<<<< HEAD
 /**
  * espprc.hpp — C++ wrapper for the BiDirectional ESPPRC library.
  *
@@ -35,22 +36,55 @@
 // and add the include directories:
 //   <ESPPRC_DIR>                            (so "src/cc/..." paths resolve)
 //   <vcpkg_root>/installed/x64-windows/include   (lemon, fmt, spdlog)
+=======
+/*
+ * C++ wrapper for the BiDirectional ESPPRC solver.
+ *
+ * Example:
+ *
+ *   #include "espprc.hpp"
+ *
+ *   espprc::Graph graph(num_vertices, source_id, sink_id);
+ *   graph.add_edge(tail, head, weight, {res0, res1});
+ *
+ *   auto result = espprc::solve(
+ *       graph,
+ *       {max_res0, max_res1},
+ *       {min_res0, min_res1},
+ *       {cut_pi0, cut_pi1},
+ *       {.time_limit = 0.5, .elementary = true, .use_bitwise = true}
+ *   );
+ */
+
+// The .cc implementation files must be compiled together. The recommended
+// route is the project CMake build, which also downloads LEMON, fmt, and spdlog.
+>>>>>>> a70663c (hey)
 
 #include "src/cc/bidirectional.h"
 
 #include <cmath>
 #include <limits>
+<<<<<<< HEAD
+=======
+#include <stdexcept>
+>>>>>>> a70663c (hey)
 #include <string>
 #include <vector>
 
 namespace espprc {
 
+<<<<<<< HEAD
 // ──────────────────────────────────────────────────────────────────────────────
 // Graph builder — accumulates edges before solving
 // ──────────────────────────────────────────────────────────────────────────────
 struct EdgeDef {
     int    tail;
     int    head;
+=======
+struct EdgeDef {
+    int tail;
+    int head;
+>>>>>>> a70663c (hey)
     double weight;
     std::vector<double> res_cost;
 };
@@ -70,6 +104,7 @@ struct Graph {
     }
 
     bool has_path() const {
+<<<<<<< HEAD
         // Quick reachability check: does any edge leave source, and any enter sink?
         bool src_out = false, snk_in = false;
         for (const auto& e : edges) {
@@ -126,11 +161,67 @@ inline Result solve(
         static_cast<int>(g.edges.size()),
         g.source,
         g.sink,
+=======
+        bool src_out = false;
+        bool sink_in = false;
+        for (const auto& edge : edges) {
+            if (edge.tail == source) {
+                src_out = true;
+            }
+            if (edge.head == sink) {
+                sink_in = true;
+            }
+        }
+        return src_out && sink_in;
+    }
+};
+
+struct Options {
+    bool elementary = true;
+    bool bounds_pruning = true;
+    bool use_bitwise = false;
+    std::string direction = "both";
+    double time_limit = 0.0;
+};
+
+struct Result {
+    std::vector<int> path;
+    double cost = std::numeric_limits<double>::infinity();
+    bool feasible = false;
+};
+
+inline Result solve(
+    const Graph& graph,
+    const std::vector<double>& max_res,
+    const std::vector<double>& min_res,
+    const std::vector<double>& cg_cut_pi,
+    const Options& opts = Options{}
+) {
+    Result result;
+
+    if (max_res.empty() || max_res.size() != min_res.size()
+        || (!cg_cut_pi.empty() && max_res.size() != cg_cut_pi.size())) {
+        return result;
+    }
+    if (graph.edges.empty() || !graph.has_path()) {
+        return result;
+    }
+    if (opts.use_bitwise && graph.num_vertices > 64) {
+        throw std::invalid_argument("use_bitwise=true supports at most 64 nodes");
+    }
+
+    bidirectional::BiDirectional solver(
+        graph.num_vertices,
+        static_cast<int>(graph.edges.size()),
+        graph.source,
+        graph.sink,
+>>>>>>> a70663c (hey)
         max_res,
         min_res,
         cg_cut_pi
     );
 
+<<<<<<< HEAD
     // Register every node 0 … num_vertices-1
     std::vector<int> node_ids;
     node_ids.reserve(g.num_vertices);
@@ -172,15 +263,65 @@ inline Result solve(
     int                        num_vertices,
     int                        source,
     int                        sink,
+=======
+    std::vector<int> node_ids;
+    node_ids.reserve(graph.num_vertices);
+    for (int node = 0; node < graph.num_vertices; ++node) {
+        node_ids.push_back(node);
+    }
+    solver.addNodes(node_ids);
+
+    for (const auto& edge : graph.edges) {
+        if (edge.res_cost.size() != max_res.size()) {
+            return result;
+        }
+        solver.addEdge(edge.tail, edge.head, edge.weight, edge.res_cost);
+    }
+
+    solver.setElementary(opts.elementary);
+    solver.setBoundsPruning(opts.bounds_pruning);
+    if (opts.use_bitwise) {
+        solver.setBitwiseElementary(true, graph.num_vertices);
+    }
+    if (opts.time_limit > 0.0) {
+        solver.setTimeLimit(opts.time_limit);
+    }
+    if (opts.direction == "forward") {
+        solver.setDirection("forward");
+    } else if (opts.direction == "backward") {
+        solver.setDirection("backward");
+    }
+
+    solver.run();
+
+    result.path = solver.getPath();
+    result.cost = solver.getTotalCost();
+    result.feasible = !result.path.empty() && std::isfinite(result.cost);
+    return result;
+}
+
+inline Result solve(
+    int num_vertices,
+    int source,
+    int sink,
+>>>>>>> a70663c (hey)
     const std::vector<EdgeDef>& edges,
     const std::vector<double>& max_res,
     const std::vector<double>& min_res,
     const std::vector<double>& cg_cut_pi,
+<<<<<<< HEAD
     const Options&             opts = Options{}
 ) {
     Graph g(num_vertices, source, sink);
     g.edges = edges;
     return solve(g, max_res, min_res, cg_cut_pi, opts);
+=======
+    const Options& opts = Options{}
+) {
+    Graph graph(num_vertices, source, sink);
+    graph.edges = edges;
+    return solve(graph, max_res, min_res, cg_cut_pi, opts);
+>>>>>>> a70663c (hey)
 }
 
 } // namespace espprc
