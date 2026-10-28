@@ -178,7 +178,7 @@ class BiDirectional {
   /// Start time to ensure time limit is met
   std::chrono::time_point<std::chrono::system_clock> start_time_;
   /// Current primal bound for a complete source-sink path
-  double primal_st_bound_ = std::nan("nan");
+  double primal_st_bound_ = std::numeric_limits<double>::infinity();
   /// iteration number
   int iteration_ = 0;
   // whether the search terminated early with a valid source-sink path

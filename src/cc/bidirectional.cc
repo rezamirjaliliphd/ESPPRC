@@ -155,6 +155,7 @@ void BiDirectional::init() {
   labelling::Label label;
   merged_labels_.clear();
   paths.clear();
+  primal_st_bound_ = std::numeric_limits<double>::infinity();
   best_label_ = std::make_shared<labelling::Label>(label);
   // Initialise resource bounds
   initResourceBounds();
@@ -672,15 +673,25 @@ void BiDirectional::saveCurrentBestLabel(const Directions& direction) {
       // Save complete source-sink path
       search_ptr->replaceIntermediateLabel(*current_label_ptr);
       improvement_found = true;
-      // Update bounds
-      if (std::isnan(primal_st_bound_) ||
-          intermediate_label_ptr->weight < primal_st_bound_) {
-        primal_st_bound_ = intermediate_label_ptr->weight;
-      }
     }
   }
 
   if (improvement_found) {
+    // Partial-label weights exclude SRI costs; only a complete feasible path
+    // with all floor costs included can supply an incumbent upper bound.
+    auto complete = direction == BWD
+        ? labelling::processBwdLabel(*intermediate_label_ptr, max_res, min_res, true)
+        : *intermediate_label_ptr;
+    if (!complete.partial_path.empty() &&
+        complete.checkStPath(graph_ptr_->source.user_id, graph_ptr_->sink.user_id) &&
+        complete.checkFeasibility(max_res, min_res)) {
+      double cost = complete.weight;
+      const auto& R = complete.resource_consumption;
+      for (size_t r = 0; r < std::min(R.size(), CG_cut_pi.size()); ++r) {
+        cost += CG_cut_pi[r] * std::floor(R[r]);
+      }
+      primal_st_bound_ = std::min(primal_st_bound_, cost);
+    }
     // SPDLOG_INFO(
     //     "\t {} \t | \t {}", getElapsedTime(), current_label_ptr->weight);
     // SPDLOG_DEBUG(
@@ -800,7 +811,8 @@ void BiDirectional::joinLabels() {
   // ref id with critical_res
   // SPDLOG_INFO("Merging");
   const int&    c_res   = params_ptr_->critical_res;
-  double        UB      = getUB();
+  // Join bounds are tightened below only after adding the full SRI cost.
+  double        UB      = std::numeric_limits<double>::infinity();
   const double& HF      = std::min(max_res_curr_[c_res], min_res_curr_[c_res]);
   auto          fwd_min = std::make_unique<double>();
   auto          bwd_min = std::make_unique<double>();
