@@ -257,9 +257,13 @@ The underlying bidirectional labeling solver and foundational label-dominance im
 
 **Relevant references**
 
-1. Torres Sanchez, D. (2020). *cspy: A Python package with a collection of algorithms for the (Resource) Constrained Shortest Path problem*. Journal of Open Source Software, 5(49), 1655. [https://doi.org/10.21105/joss.01655](https://doi.org/10.21105/joss.01655)
+References
 
-2. Jepsen, M., Petersen, B., Spoorendonk, S., & Pisinger, D. (2008). *Subset-Row Inequalities Applied to the Vehicle-Routing Problem with Time Windows*. Operations Research, 56(2), 497–511. [https://doi.org/10.1287/opre.1070.0449](https://doi.org/10.1287/opre.1070.0449)
+Torres Sanchez, D. (2020). cspy: A Python package with a collection of algorithms for the (Resource) Constrained Shortest Path problem. Journal of Open Source Software, 5(49), 1655. https://doi.org/10.21105/joss.01655
+
+Sadykov, R., Uchoa, E., & Pessoa, A. (2021). A Bucket Graph–Based Labeling Algorithm with Application to Vehicle Routing. Transportation Science, 55(1), 4–28. https://doi.org/10.1287/trsc.2020.0985
+
+Jepsen, M., Petersen, B., Spoorendonk, S., & Pisinger, D. (2008). Subset-Row Inequalities Applied to the Vehicle-Routing Problem with Time Windows. Operations Research, 56(2), 497–511. https://doi.org/10.1287/opre.1070.0449
 
 The SRI implementation supports pricing costs using supplied coefficients. It does not implement the master problem or a cut-separation algorithm.
 
