@@ -37,6 +37,16 @@ class Params {
   bool bounds_pruning = false;
   bool find_critical_res = false;
   int critical_res = 0;
+  double bucket_width = 5.;
+  bool adaptive_buckets = true;
+  bool bucket_dominance = true;
+  bool profile_dominance = false;
+  bool bucket_extension = true;
+  bool profile_extension = false;
+  bool bucket_joining = true;
+  bool profile_joining = false;
+  bool parallel_joining = false;
+  int joining_threads = 1;
   bidirectional::REFCallback* ref_callback = nullptr;
 
   // Time window support

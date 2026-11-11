@@ -1,6 +1,9 @@
 #ifndef SRC_CC_BIDIRECTIONAL_H__
 #define SRC_CC_BIDIRECTIONAL_H__
 
+#include <array>
+#include <exception>
+#include <unordered_map>
 #include <chrono> // timing (e.g. time_point)
 #include <vector>
 
@@ -27,6 +30,10 @@ namespace bidirectional {
  * 4. call `run`
  */
 class BiDirectional {
+#ifdef ESPPRC_TESTING
+  friend struct BucketJoiningTestAccess;
+  friend struct BucketExtensionTestAccess;
+#endif
  public:
   /**
    * @param[in] number_vertices, int number of vertices in the graph (to be
@@ -126,6 +133,60 @@ class BiDirectional {
   void setCriticalRes(const int& critical_res_in) {
     params_ptr_->setCriticalRes(critical_res_in);
   }
+
+  void setBucketWidth(const double& width) { params_ptr_->bucket_width = width; }
+  void setAdaptiveBuckets(const bool& enable) { params_ptr_->adaptive_buckets = enable; }
+  void setBucketDominance(const bool& enable) { params_ptr_->bucket_dominance = enable; }
+  void setProfileDominance(const bool& enable) { params_ptr_->profile_dominance = enable; }
+  void setBucketExtension(const bool& enable) { params_ptr_->bucket_extension = enable; }
+  void setProfileExtension(const bool& enable) { params_ptr_->profile_extension = enable; }
+  void setBucketJoining(const bool& enable) { params_ptr_->bucket_joining = enable; }
+  void setProfileJoining(const bool& enable) { params_ptr_->profile_joining = enable; }
+  void setParallelJoining(const bool& enable, const int& threads = 1) {
+    params_ptr_->parallel_joining = enable;
+    params_ptr_->joining_threads = threads > 1 ? threads : 1;
+  }
+  std::vector<double> getJoiningStats() const {
+    return {static_cast<double>(joining_stats_.group_checks),
+            static_cast<double>(joining_stats_.groups_skipped),
+            static_cast<double>(joining_stats_.blocks_skipped),
+            static_cast<double>(joining_stats_.label_pairs),
+            static_cast<double>(joining_stats_.full_merges),
+            static_cast<double>(joining_stats_.resource_shortcuts),
+            joining_stats_.seconds,
+            static_cast<double>(joining_stats_.parallel_batches),
+            static_cast<double>(joining_stats_.parallel_pairs),
+            static_cast<double>(joining_stats_.speculative_records)};
+  }
+  std::vector<double> getExtensionStats() const {
+    const auto& a = fwd_search_ptr_->extension_stats;
+    const auto& b = bwd_search_ptr_->extension_stats;
+    return {static_cast<double>(a.labels_processed + b.labels_processed),
+            static_cast<double>(a.arcs_considered + b.arcs_considered),
+            static_cast<double>(a.eligible_extensions + b.eligible_extensions),
+            static_cast<double>(a.full_extensions + b.full_extensions),
+            static_cast<double>(a.bucket_rejections + b.bucket_rejections),
+            static_cast<double>(a.infeasible_extensions + b.infeasible_extensions),
+            static_cast<double>(a.cache_hits + b.cache_hits),
+            static_cast<double>(a.cache_rebuilds + b.cache_rebuilds),
+            static_cast<double>(a.parallel_labels + b.parallel_labels),
+            a.generation_seconds + b.generation_seconds,
+            a.total_seconds + b.total_seconds,
+            static_cast<double>(a.parallel_batches + b.parallel_batches),
+            static_cast<double>(a.prepared_labels + b.prepared_labels),
+            static_cast<double>(a.prepared_extensions + b.prepared_extensions),
+            static_cast<double>(a.discarded_labels + b.discarded_labels)};
+  }
+  std::vector<double> getDominanceStats() const {
+    const auto& a = fwd_search_ptr_->dominance_stats;
+    const auto& b = bwd_search_ptr_->dominance_stats;
+    return {static_cast<double>(a.queries + b.queries),
+            static_cast<double>(a.label_pairs + b.label_pairs),
+            static_cast<double>(a.exact_checks + b.exact_checks),
+            static_cast<double>(a.bucket_checks + b.bucket_checks),
+            static_cast<double>(a.bucket_directions_skipped + b.bucket_directions_skipped),
+            a.seconds + b.seconds};
+  }
   /// Pass python callback for label extensions.
   /// Note: swig needs namespace specifier
   void setREFCallback(bidirectional::REFCallback* cb) {
@@ -156,6 +217,9 @@ class BiDirectional {
     params_ptr_->setParallel(enable, threads);
   }
 
+  /// Retain merged labels and paths only when the caller needs them.
+  void setCollectPaths(const bool& enable) { collect_paths_ = enable; }
+
   /// set random using a given seed
   // void setSeed(const int& seed) { std::srand(seed); }
   // Return every feasible merged label (source→sink) found during join
@@ -166,6 +230,12 @@ class BiDirectional {
 
 
  private:
+  struct JoiningStats {
+    std::uint64_t group_checks = 0, groups_skipped = 0, blocks_skipped = 0;
+    std::uint64_t label_pairs = 0, full_merges = 0, resource_shortcuts = 0;
+    std::uint64_t parallel_batches = 0, parallel_pairs = 0, speculative_records = 0;
+    double seconds = 0.;
+  } joining_stats_;
   /// Search options for the algorithm. @see bidirectional::Params
   std::unique_ptr<Params> params_ptr_;
   /// Pointer to graph
@@ -187,6 +257,8 @@ class BiDirectional {
   bool       time_limit_reached_ = false;
   std::vector<labelling::Label> merged_labels_;
   std::vector<std::vector<int>> paths;
+  // Preserve the native API's historical collection behavior by default.
+  bool collect_paths_ = true;
   /// Vectors with current maximum and minimum resources (first entry contains
   /// the dynamic halfway point).
   std::vector<double> max_res_curr_, min_res_curr_;
@@ -197,6 +269,28 @@ class BiDirectional {
   std::shared_ptr<labelling::Label> best_label_;
 
   std::unique_ptr<Search> fwd_search_ptr_, bwd_search_ptr_;
+
+  struct PreparedExtension {
+    PreparedExtension() = default;
+    PreparedExtension(PreparedExtension&&) = default;
+    PreparedExtension& operator=(PreparedExtension&&) = default;
+    PreparedExtension(const PreparedExtension&) = delete;
+    PreparedExtension& operator=(const PreparedExtension&) = delete;
+    std::vector<std::unique_ptr<labelling::Label>> children;
+    std::uint64_t generated = 0;
+    bool expired = false;
+    std::exception_ptr error;
+  };
+  struct ExtensionPrefetch {
+    std::unordered_map<std::uint64_t, PreparedExtension> pending;
+    size_t misses = 0;
+  };
+  std::array<ExtensionPrefetch, 2> extension_prefetch_;
+  bool extendFromBatch(const Directions& direction,
+                       const std::vector<AdjVertex>& arcs,
+                       const std::vector<unsigned char>* blocked);
+  const std::vector<AdjVertex>& cachedExtensionArcs(const Directions& direction, int node);
+  void clearExtensionBatches();
 
   /* Initialisation Methods */
 
@@ -306,7 +400,8 @@ class BiDirectional {
   void extendSingleLabel(
       labelling::Label* label,
       const Directions& direction,
-      const AdjVertex&  adj_vertex);
+      const AdjVertex&  adj_vertex,
+      bool resource_infeasible = false);
 
   /**
    * Saves/updates globally best label and check if it is Source-Sink so we

@@ -62,7 +62,13 @@ Label Label::extend(
     const bidirectional::AdjVertex&  adjacent_vertex,
     const bidirectional::Directions& direction,
     const std::vector<double>&       max_res,
-    const std::vector<double>&       min_res) {
+    const std::vector<double>& min_res,
+    bool resource_infeasible) {
+  if (resource_infeasible) {
+    // Preserve the failed-extension side effect at the original arc position.
+    if (params_ptr->elementary) markNodeUnreachable(adjacent_vertex.vertex.user_id);
+    return Label();
+  }
   // extract partial_path
   auto new_partial_path = partial_path;
   // extract vertex
@@ -370,23 +376,29 @@ bool runDominanceEff(
     std::vector<Label>*              efficient_labels_ptr,
     const Label&                     label,
     const bidirectional::Directions& direction,
-    const bool&                      elementary) {
+    const bool&                      elementary,
+    DominanceStats*                   stats) {
   bool dominated = false;
   for (auto it = efficient_labels_ptr->begin();
        it != efficient_labels_ptr->end();) {
     if (label.params_ptr->timeLimitExceeded()) {
       return true;
     }
+    if (stats) ++stats->label_pairs;
     bool         deleted = false;
     const Label& label2  = *it;
     if (label != label2) {
       // check if label dominates label2
+      if (stats) ++stats->exact_checks;
       if (label.checkDominance(label2, direction)) {
         it      = efficient_labels_ptr->erase(it);
         deleted = true;
-      } else if (label2.checkDominance(label, direction)) {
-        dominated = true;
-        break;
+      } else {
+        if (stats) ++stats->exact_checks;
+        if (label2.checkDominance(label, direction)) {
+          dominated = true;
+          break;
+        }
       }
     }
 
@@ -476,18 +488,17 @@ bool mergePreCheck(
   if (fwd_label.vertex.lemon_id == -1 || bwd_label.vertex.lemon_id == -1)
     return false;
 
-  // Merge paths
-  std::vector<int> path = fwd_label.partial_path;
-  path.insert(
-      path.end(),
-      bwd_label.partial_path.rbegin(),
-      bwd_label.partial_path.rend());
-
   if (fwd_label.params_ptr->elementary) {
-    std::sort(path.begin(), path.end());
-    const bool& contains_duplicates =
-        std::adjacent_find(path.begin(), path.end()) != path.end();
-    return !contains_duplicates;
+    // Each partial path is already elementary. Test only their intersection,
+    // without allocating and sorting a concatenated path for every pair.
+    for (const int node : fwd_label.partial_path) {
+      if (std::find(bwd_label.partial_path.begin(),
+                    bwd_label.partial_path.end(), node) !=
+          bwd_label.partial_path.end()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // Check for 2-cycles.
@@ -517,17 +528,17 @@ Label mergeLabels(
   }
   std::vector<double>    final_res;
   bidirectional::Params* params_ptr = fwd_label.params_ptr;
-  // Dummy label
-  auto bwd_label_ptr = std::make_unique<Label>();
   // Extend resources along edge
   if (params_ptr->ref_callback == nullptr) {
-    const std::vector<double>& temp_res = bidirectional::additiveForwardREF(
-        fwd_label.resource_consumption, adj_vertex.resource_consumption);
-    // Process backward label (invert path and resources)
-    auto bwd_label_ =
-        std::make_unique<Label>(processBwdLabel(bwd_label, max_res, temp_res));
-    final_res = bwd_label_->resource_consumption;
-    bwd_label_ptr.swap(bwd_label_);
+    final_res.resize(fwd_label.resource_consumption.size());
+    for (size_t r = 0; r < final_res.size(); ++r) {
+      const double backward = r == static_cast<size_t>(params_ptr->critical_res)
+          ? max_res[r] - bwd_label.resource_consumption[r]
+          : bwd_label.resource_consumption[r];
+      // Keep the original addition order, including at SRI floor boundaries.
+      final_res[r] = backward + (fwd_label.resource_consumption[r] +
+                                 adj_vertex.resource_consumption[r]);
+    }
   } else {
     final_res = params_ptr->ref_callback->REF_join(
         fwd_label.resource_consumption,
@@ -549,20 +560,20 @@ Label mergeLabels(
                              bwd_monotone_edge + bwd_res_inverted)) {
       final_res[c_res] += bwd_res_inverted;
     }
-    auto bwd_label_ =
-        std::make_unique<Label>(processBwdLabel(bwd_label, max_res, min_res));
-    bwd_label_ptr.swap(bwd_label_);
   }
   // process final weight
   const double& weight =
-      fwd_label.weight + adj_vertex.weight + bwd_label_ptr->weight;
+      fwd_label.weight + adj_vertex.weight + bwd_label.weight;
 
   // Merge paths
-  std::vector<int> final_path = fwd_label.partial_path;
+  std::vector<int> final_path;
+  final_path.reserve(fwd_label.partial_path.size() + bwd_label.partial_path.size());
+  final_path.insert(final_path.end(), fwd_label.partial_path.begin(),
+                    fwd_label.partial_path.end());
   final_path.insert(
       final_path.end(),
-      bwd_label_ptr->partial_path.begin(),
-      bwd_label_ptr->partial_path.end());
+      bwd_label.partial_path.rbegin(),
+      bwd_label.partial_path.rend());
   // Get phi value
   const double& phi = getPhiValue(fwd_label, bwd_label, max_res);
   return Label(weight, sink, final_res, final_path, params_ptr, phi);

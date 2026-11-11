@@ -22,24 +22,10 @@ def _add_vcpkg_bin():
 if sys.platform == "win32":
     _add_vcpkg_bin()
 
-__all__ = []
+__version__ = "0.3.0.dev0"
+from . import Bidirectional
+from .Bidirectional import solve_espprc
 
-# Import the compiled extension explicitly
-try:
-    from . import Bidirectional
-
-    # re-export module
-    __all__.append("Bidirectional")
-
-    if hasattr(Bidirectional, "solve_espprc"):
-        solve_espprc = Bidirectional.solve_espprc
-        solve_espprc_enhanced = solve_espprc
-        ESPPRC = solve_espprc
-        __all__.append("solve_espprc")
-        __all__.append("solve_espprc_enhanced")
-        __all__.append("ESPPRC")
-
-except Exception as e:
-    # Keep package importable even if extension fails
-    # (DO NOT import fallback Python modules here unless really needed)
-    pass
+solve_espprc_enhanced = solve_espprc
+ESPPRC = solve_espprc
+__all__ = ["Bidirectional", "solve_espprc", "solve_espprc_enhanced", "ESPPRC"]

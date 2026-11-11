@@ -9,6 +9,9 @@ dependencies:
   - ninja
   - scikit-build-core>=0.10
   - networkx>=2.5
+  - cython>=3.0,<4
+  - pytest>=7
+  - numpy
   - lemon
   - spdlog
   - fmt

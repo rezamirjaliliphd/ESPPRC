@@ -10,7 +10,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
-find_package(OpenMP QUIET)
+option(ESPPRC_ENABLE_OPENMP "Enable optional parallel labeling stages" ON)
+if(ESPPRC_ENABLE_OPENMP)
+  find_package(OpenMP QUIET)
+endif()
 
 message(STATUS "ESPPRC target platform: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "ESPPRC C++ compiler: ${CMAKE_CXX_COMPILER_ID} (${CMAKE_CXX_COMPILER})")
@@ -37,9 +40,21 @@ endif()
 
 include(Dependencies)
 
+# Always generate the wrapper from the maintained .pyx/.pxd files, so source
+# distributions cannot silently compile a stale checked-in Cython translation.
+set(ESPPRC_CYTHON_CPP "${CMAKE_CURRENT_BINARY_DIR}/generated/Bidirectional.cpp")
+add_custom_command(
+  OUTPUT "${ESPPRC_CYTHON_CPP}"
+  COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/generated"
+  COMMAND "${Python3_EXECUTABLE}" -m cython --cplus -3
+          --output-file "${ESPPRC_CYTHON_CPP}"
+          "${CMAKE_CURRENT_SOURCE_DIR}/python/espprc/Bidirectional.pyx"
+  DEPENDS python/espprc/Bidirectional.pyx python/espprc/Bidirectional.pxd
+  VERBATIM
+)
 add_library(
   ESPPRC_Bidirectional MODULE
-  python/espprc/Bidirectional.cpp
+  "${ESPPRC_CYTHON_CPP}"
   src/cc/bidirectional.cc
   src/cc/digraph.cc
   src/cc/labelling.cc
@@ -65,7 +80,7 @@ target_link_libraries(
     spdlog::spdlog
 )
 
-if(OpenMP_CXX_FOUND)
+if(ESPPRC_ENABLE_OPENMP AND OpenMP_CXX_FOUND)
   target_link_libraries(ESPPRC_Bidirectional PRIVATE OpenMP::OpenMP_CXX)
   message(STATUS "ESPPRC OpenMP: enabled")
 else()
@@ -92,5 +107,80 @@ set_target_properties(
     SUFFIX "${Python3_EXTENSION_SUFFIX}"
 )
 
-install(FILES python/espprc/__init__.py DESTINATION espprc)
+install(FILES python/espprc/__init__.py python/espprc/datasets.py DESTINATION espprc)
+install(DIRECTORY python/espprc/data DESTINATION espprc FILES_MATCHING PATTERN "*.json")
 install(TARGETS ESPPRC_Bidirectional LIBRARY DESTINATION espprc RUNTIME DESTINATION espprc)
+
+option(ESPPRC_BUILD_TESTS "Build native ESPPRC regression tests" OFF)
+if(ESPPRC_BUILD_TESTS)
+  enable_testing()
+  add_executable(espprc_duration_bucket_tests
+    test_duration_buckets.cc
+    src/cc/search.cc
+    src/cc/labelling.cc
+    src/cc/ref_callback.cc
+  )
+  target_include_directories(espprc_duration_bucket_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src/cc")
+  target_link_libraries(espprc_duration_bucket_tests PRIVATE
+    LEMON::lemon fmt::fmt spdlog::spdlog)
+  add_test(NAME duration_buckets COMMAND espprc_duration_bucket_tests)
+  add_executable(espprc_bucket_dominance_tests
+    test_bucket_dominance.cc
+    src/cc/search.cc
+    src/cc/labelling.cc
+    src/cc/ref_callback.cc
+  )
+  target_include_directories(espprc_bucket_dominance_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src/cc")
+  target_link_libraries(espprc_bucket_dominance_tests PRIVATE
+    LEMON::lemon fmt::fmt spdlog::spdlog)
+  add_test(NAME bucket_dominance COMMAND espprc_bucket_dominance_tests)
+  add_executable(espprc_duplicate_index_tests
+    test_duplicate_index.cc
+    src/cc/search.cc
+    src/cc/labelling.cc
+    src/cc/ref_callback.cc
+  )
+  target_include_directories(espprc_duplicate_index_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src/cc")
+  target_link_libraries(espprc_duplicate_index_tests PRIVATE
+    LEMON::lemon fmt::fmt spdlog::spdlog)
+  add_test(NAME duplicate_index COMMAND espprc_duplicate_index_tests)
+  add_executable(espprc_bucket_extension_tests
+    test_bucket_extension.cc
+    src/cc/bidirectional.cc
+    src/cc/digraph.cc
+    src/cc/preprocessing.cc
+    src/cc/search.cc
+    src/cc/labelling.cc
+    src/cc/ref_callback.cc
+  )
+  target_compile_definitions(espprc_bucket_extension_tests PRIVATE ESPPRC_TESTING)
+  target_include_directories(espprc_bucket_extension_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src/cc")
+  target_link_libraries(espprc_bucket_extension_tests PRIVATE
+    LEMON::lemon fmt::fmt spdlog::spdlog)
+  if(ESPPRC_ENABLE_OPENMP AND OpenMP_CXX_FOUND)
+    target_link_libraries(espprc_bucket_extension_tests PRIVATE OpenMP::OpenMP_CXX)
+  endif()
+  add_test(NAME bucket_extension COMMAND espprc_bucket_extension_tests)
+  add_executable(espprc_bucket_joining_tests
+    test_bucket_joining.cc
+    src/cc/bidirectional.cc
+    src/cc/digraph.cc
+    src/cc/labelling.cc
+    src/cc/preprocessing.cc
+    src/cc/ref_callback.cc
+    src/cc/search.cc
+  )
+  target_compile_definitions(espprc_bucket_joining_tests PRIVATE ESPPRC_TESTING)
+  target_include_directories(espprc_bucket_joining_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/src/cc")
+  target_link_libraries(espprc_bucket_joining_tests PRIVATE
+    LEMON::lemon fmt::fmt spdlog::spdlog)
+  if(ESPPRC_ENABLE_OPENMP AND OpenMP_CXX_FOUND)
+    target_link_libraries(espprc_bucket_joining_tests PRIVATE OpenMP::OpenMP_CXX)
+  endif()
+  add_test(NAME bucket_joining COMMAND espprc_bucket_joining_tests)
+endif()

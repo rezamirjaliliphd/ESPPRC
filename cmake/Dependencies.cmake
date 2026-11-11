@@ -72,6 +72,7 @@ elseif(ESPPRC_VENDOR_DEPS)
   FetchContent_Declare(
     lemon
     URL https://lemon.cs.elte.hu/pub/sources/lemon-1.3.1.tar.gz
+    URL_HASH SHA256=71b7c725f4c0b4a8ccb92eb87b208701586cf7a96156ebd821ca3ed855bad3c8
   )
   set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
   FetchContent_GetProperties(lemon)

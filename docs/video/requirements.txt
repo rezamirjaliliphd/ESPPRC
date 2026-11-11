@@ -1,0 +1,9 @@
+# Optional animation tools. Install ESPPRC itself from the repository root.
+# 3b1b/manim v1.7.2, commit f427fc67df75513be0cd3f3329e327a9a19401c3.
+manimgl==1.7.2
+# This Manim release imports pkg_resources, removed from newer setuptools.
+setuptools==80.9.0
+imageio-ffmpeg==0.8.1
+pyglet==2.1.19
+moderngl==5.13.0
+manimpango==0.7.1

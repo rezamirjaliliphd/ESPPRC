@@ -1,18 +1,32 @@
 [build-system]
-requires = ["scikit-build-core>=0.10"]
+requires = ["scikit-build-core>=0.10", "Cython>=3.0,<4"]
 build-backend = "scikit_build_core.build"
 
 [project]
 name = "espprc"
-version = "0.2.0"
-description = "Optimized ESPPRC solver"
+version = "0.3.0.dev0"
+description = "Bidirectional ESPPRC labeling with resource buckets and optional OpenMP"
+readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.9"
 authors = [{name = "Reza Mirjalili"}]
 dependencies = ["networkx>=2.5"]
 
 [project.optional-dependencies]
-test = ["numpy"]
+test = ["numpy", "pytest>=7"]
+
+[project.urls]
+Repository = "https://github.com/rezamirjaliliphd/ESPPRC"
 
 [tool.scikit-build]
 cmake.version = ">=3.22"
 wheel.packages = []
+wheel.license-files = ["LICENSE", "NOTICE", "licenses/*.txt"]
+sdist.include = ["/LICENSE", "/NOTICE", "/licenses/*.txt", "/src/cc/*.cc", "/src/cc/*.h", "/src/cc/*.in", "/python/espprc/*.py", "/python/espprc/*.pyx", "/python/espprc/*.pxd", "/python/espprc/*.cpp", "/python/espprc/data/*.json", "/cmake/*.cmake", "/test_*.py", "/test_*.cc", "/benchmarks/*.py", "/benchmarks/*.md", "/benchmarks/history/*.md", "/benchmarks/history/*.json", "/docs/*.md", "/docs/video/*.py", "/docs/video/*.md", "/docs/video/*.bib", "/docs/video/requirements.txt", "/docs/video/fonts/*.otf", "/docs/video/fonts/*.txt", "/docs/video/fonts/*.TXT", "/docs/video/fonts/*.md", "/.github/workflows/*.yml", "/CMakeLists.txt", "/espprc.hpp", "/README.md", "/QUICK_START.md", "/IMPLEMENTATION_SUMMARY.md", "/environment.yml", "/setup.py", "/.gitignore"]
+sdist.exclude = ["/docs/video/media/**","**/__pycache__/**", "**/*.pyc", "**/*.so", "**/*.egg-info/**", "build*/**", "dist/**", ".pytest_cache/**"]
+
+[tool.pytest.ini_options]
+python_files = ["test_*.py"]
+testpaths = ["."]
+norecursedirs = ["build*", "dist", ".git", ".venv*", "benchmarks"]
+addopts = "-ra"

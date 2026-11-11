@@ -1,0 +1,44 @@
+{
+  "drone20": {
+    "file": "drone20.json",
+    "sha256": "729f52897af3cb5de79ef7f6755c1580abb26743d552b08e0915c737533e579a",
+    "nodes": 22,
+    "arcs": 420
+  },
+  "sri20": {
+    "file": "sri20.json",
+    "sha256": "48d447aa62ef8dff255177d83a87caa288ff7d132edda515a7a643dd1975f5ee",
+    "nodes": 22,
+    "arcs": 421
+  },
+  "sri14": {
+    "file": "sri14.json",
+    "sha256": "799dd4981eb165eea9a8df2215ff6c46f095bfc05ad7ad969a0b1217631998ca",
+    "nodes": 16,
+    "arcs": 211
+  },
+  "sri14_sets": {
+    "file": "sri14_sets.json",
+    "sha256": "8c9207fedc9518d09b6e00c08512c064fbb95a1173805bfbacea11d01c4a26b5",
+    "nodes": 81,
+    "arcs": 211
+  },
+  "wide40": {
+    "file": "wide40.json",
+    "sha256": "fd3692b7c3b58e7e0b6638ab70fa95bc823e4281cfa47a16ffdca2a0cd583913",
+    "nodes": 42,
+    "arcs": 1641
+  },
+  "wide40_deep": {
+    "file": "wide40_deep.json",
+    "sha256": "090a12c65edf14499e8ffb7d0bcb6a982897f3cc459f3eb5a67130e9fb9a7d8f",
+    "nodes": 42,
+    "arcs": 1641
+  },
+  "truck": {
+    "file": "truck.json",
+    "sha256": "447e81de89a20bfab57cefa94434b8529876854366e57607cbe11e5f6d1195cc",
+    "nodes": 14,
+    "arcs": 157
+  }
+}

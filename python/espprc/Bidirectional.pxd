@@ -19,7 +19,7 @@ cdef extern from "bidirectional.h" namespace "bidirectional":
         void addEdge(int tail, int head, double weight,
                      const vector[double]& resource_consumption)
 
-        void run()
+        void run() except +
         
         # Getters
         vector[int] getPath() const
@@ -37,9 +37,22 @@ cdef extern from "bidirectional.h" namespace "bidirectional":
         void setBoundsPruning(const bool& bounds_pruning_in)
         void setFindCriticalRes(const bool& find_critical_res_in)
         void setCriticalRes(const int& critical_res_in)
+        void setBucketWidth(const double& width)
+        void setAdaptiveBuckets(const bool& enable)
+        void setBucketDominance(const bool& enable)
+        void setProfileDominance(const bool& enable)
+        vector[double] getDominanceStats() const
+        void setBucketExtension(const bool& enable)
+        void setProfileExtension(const bool& enable)
+        vector[double] getExtensionStats() const
+        void setBucketJoining(const bool& enable)
+        void setProfileJoining(const bool& enable)
+        void setParallelJoining(const bool& enable, const int& threads)
+        vector[double] getJoiningStats() const
         
         # New enhanced setters
         void setKCycleElimination(const int& k)
         void setTimeWindows(const bool& enable, const int& res_idx)
         void setBitwiseElementary(const bool& enable, const int& max_nodes_in)
         void setParallel(const bool& enable, const int& threads)
+        void setCollectPaths(const bool& enable)

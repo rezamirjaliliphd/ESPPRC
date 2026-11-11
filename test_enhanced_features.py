@@ -52,9 +52,9 @@ def test_basic_functionality():
         print("✓ Basic test PASSED")
 
     except ImportError:
-        print("✗ Module not built - run 'pip install .' first")
+        raise
     except Exception as e:
-        print(f"✗ Basic test FAILED: {e}")
+        raise
 
 def test_elementary_constraint():
     """Test 2: Elementary path constraint"""
@@ -100,9 +100,9 @@ def test_elementary_constraint():
         print("✓ Elementary constraint test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Elementary test FAILED: {e}")
+        raise
 
 def test_k_cycle_elimination():
     """Test 3: K-cycle elimination"""
@@ -134,9 +134,9 @@ def test_k_cycle_elimination():
         print("✓ K-cycle elimination test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ K-cycle test FAILED: {e}")
+        raise
 
 def test_time_windows():
     """Test 4: Time window constraints"""
@@ -178,9 +178,9 @@ def test_time_windows():
         print("✓ Time window test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Time window test FAILED: {e}")
+        raise
 
 def test_bitwise_optimization():
     """Test 5: Bitwise elementary checking"""
@@ -231,9 +231,9 @@ def test_bitwise_optimization():
         print("✓ Bitwise optimization test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Bitwise test FAILED: {e}")
+        raise
 
 def test_bounds_pruning():
     """Test 6: Bounds pruning"""
@@ -272,9 +272,9 @@ def test_bounds_pruning():
         print("✓ Bounds pruning test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Bounds pruning test FAILED: {e}")
+        raise
 
 def test_direction_control():
     """Test 7: Search direction control"""
@@ -302,9 +302,9 @@ def test_direction_control():
         print("✓ Direction control test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Direction test FAILED: {e}")
+        raise
 
 def test_time_limit_threshold():
     """Test 8: Time limit and threshold"""
@@ -343,9 +343,9 @@ def test_time_limit_threshold():
         print("✓ Time limit and threshold test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Time/threshold test FAILED: {e}")
+        raise
 
 def test_get_all_paths():
     """Test 9: Get all feasible paths"""
@@ -384,9 +384,9 @@ def test_get_all_paths():
         print("✓ Get all paths test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Get all paths test FAILED: {e}")
+        raise
 
 def test_sequential_repeatability():
     """Test 10: Sequential repeatability"""
@@ -432,9 +432,9 @@ def test_sequential_repeatability():
         print("✓ Sequential repeatability test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Sequential repeatability test FAILED: {e}")
+        raise
 
 def test_chvatal_gomory_cuts():
     """Test 11: Chvátal-Gomory cutting plane cuts"""
@@ -477,9 +477,9 @@ def test_chvatal_gomory_cuts():
         print("✓ Chvátal-Gomory cuts test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ CG cuts test FAILED: {e}")
+        raise
 
 def test_combined_features():
     """Test 12: All features combined"""
@@ -514,9 +514,9 @@ def test_combined_features():
         print("✓ All features work together - PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Combined features test FAILED: {e}")
+        raise
 
 def test_edge_cases():
     """Test 13: Edge cases"""
@@ -565,9 +565,9 @@ def test_edge_cases():
         print("✓ Edge cases test PASSED")
 
     except ImportError:
-        print("✗ Module not built")
+        raise
     except Exception as e:
-        print(f"✗ Edge cases test FAILED: {e}")
+        raise
 
 def run_all_tests():
     """Run all comprehensive tests"""

@@ -1,0 +1,46 @@
+1
+00:00:00,000 --> 00:00:05,400
+Find the cheapest route that respects resource limits
+and never repeats a customer.
+
+2
+00:00:05,400 --> 00:00:10,200
+Time limit: 8. Payload limit: 2. The cost-3 route takes
+12 time units: infeasible.
+
+3
+00:00:10,200 --> 00:00:15,867
+The best feasible path is S–B–D–T: cost six, time six,
+payload two. Verified by the solver and exhaustive
+enumeration.
+
+4
+00:00:15,867 --> 00:00:23,833
+Bidirectional labeling grows paths from the start and
+from the destination, then joins compatible partial
+paths.
+
+5
+00:00:23,833 --> 00:00:31,200
+At the same node, with the same visited set, a label
+with no higher cost or resource use can dominate
+another.
+
+6
+00:00:31,200 --> 00:00:38,467
+Adaptive buckets group labels by resource use.
+Conservative summaries skip impossible comparisons;
+surviving labels still receive exact checks.
+
+7
+00:00:38,467 --> 00:00:44,067
+ESPPRC extends cspy with bucket screening, faster
+joins, SRI-aware costs and optional parallel
+preparation. Serial remains the default.
+
+8
+00:00:44,067 --> 00:00:52,067
+Built on cspy by David Torres Sanchez. Subset-row
+inequalities: Jepsen, Petersen, Spoorendonk and
+Pisinger, 2008. Animation created with 3Blue1Brown’s
+ManimGL.

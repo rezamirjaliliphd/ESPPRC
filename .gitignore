@@ -1,78 +1,38 @@
-<<<<<<< HEAD
-# Python bytecode/cache
+# Python and test outputs
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Native extension build outputs
-*.pyd
-*.dll
-*.lib
-*.exp
-*.obj
-*.pdb
-
-# Generated Cython output
-python/espprc/bidirectional_enhanced.cpp
-
-# Test/cache files
 .pytest_cache/
 .coverage
 htmlcov/
-=======
-# Python bytecode and caches
-__pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-
-# Python packaging/build outputs
-build/
+*.egg-info/
+# Builds and local environments
+build*/
 dist/
 wheelhouse/
-*.egg-info/
-pip-wheel-metadata/
-
-# Compiled extension artifacts
+.venv*/
+venv/
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+_skbuild/
+compile_commands.json
 *.so
 *.pyd
 *.dll
 *.dylib
-
-# CMake build outputs
-CMakeCache.txt
-CMakeFiles/
-cmake-build-*/
-_skbuild/
-*.cmake.user
-compile_commands.json
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)
-
-# Local environments
-.venv/
-venv/
-env/
-<<<<<<< HEAD
-
-# IDE/OS noise
+*.a
+*.o
+*.obj
+*.lib
+*.exp
+*.pdb
+# Local benchmark outputs (fixtures and historical results are versioned)
+benchmark-results*/
+# Editor and operating-system files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-=======
+*~
 .env
 .env.*
-
-# Editor/OS noise
-.DS_Store
-Thumbs.db
-*~
-
->>>>>>> 2fd84a4 (improved the ESPPRC installation and compatibility)

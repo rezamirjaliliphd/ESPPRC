@@ -34,6 +34,8 @@ class Label {
   bidirectional::Params* params_ptr        = nullptr;
   // Phi value for joining algorithm from Righini and Salani (2006)
   double phi = std::nan("nan");
+  // Queue identity for speculative extension; excluded from all label comparisons.
+  std::uint64_t extension_id = 0;
 
   /* Constructors */
   /// Dummy constructor
@@ -84,7 +86,9 @@ class Label {
       const bidirectional::AdjVertex&  adjacent_vertex,
       const bidirectional::Directions& direction,
       const std::vector<double>&       max_res = {},
-      const std::vector<double>&       min_res = {});
+      const std::vector<double>& min_res = {},
+      // Only set after proving resource infeasibility for this label.
+      bool resource_infeasible = false);
 
   /**
    * Check if this dominates other.
@@ -227,11 +231,21 @@ Label getNextLabel(
  *
  * @return bool, true if `label` is dominated, false otherwise
  */
+struct DominanceStats {
+  std::uint64_t queries = 0;
+  std::uint64_t label_pairs = 0;
+  std::uint64_t exact_checks = 0;
+  std::uint64_t bucket_checks = 0;
+  std::uint64_t bucket_directions_skipped = 0;
+  double seconds = 0.;
+};
+
 bool runDominanceEff(
     std::vector<Label>*              efficient_labels_ptr,
     const Label&                     label,
     const bidirectional::Directions& direction,
-    const bool&                      elementary);
+    const bool&                      elementary,
+    DominanceStats*                   stats = nullptr);
 
 /**
  * Reverse backward path and inverts resource consumption

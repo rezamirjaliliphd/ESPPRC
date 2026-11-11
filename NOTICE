@@ -1,0 +1,18 @@
+ESPPRC
+
+Copyright (c) 2026 Reza Mirjalili. Project contributions and bundled generated
+research/synthetic fixtures are distributed under the MIT license in LICENSE.
+
+The native labeling implementation derives from cspy by David Torres Sanchez.
+Its original MIT notice is retained in licenses/cspy.txt. This project is an
+independent derivative and does not imply endorsement by cspy's authors.
+
+Native dependencies retain their own licenses: LEMON (licenses/LEMON.txt),
+spdlog (licenses/spdlog.txt), and fmt (licenses/fmt.txt). Dependency code is not
+copied into this source tree; builds may download or use installed versions.
+Preserve the applicable notices when distributing compiled binaries.
+
+The optional explainer uses unmodified Latin Modern fonts by B. Jackowski,
+J. M. Nowacki, P. Strzelczyk and P. Pianowski, based on Donald E. Knuth's
+Computer Modern. Font files retain the GUST Font License and notices in
+docs/video/fonts/. They are not included in the solver wheel.
